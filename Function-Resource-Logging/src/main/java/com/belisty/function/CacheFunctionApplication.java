@@ -5,7 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication(scanBasePackages = {
 		"com.util",
-		"com.belisty",
+		"com.belisty.function",
 	})
 public class CacheFunctionApplication {
 

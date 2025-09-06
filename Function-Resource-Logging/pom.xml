@@ -4,18 +4,16 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>com.belisty</groupId>
 	<artifactId>cache</artifactId>
-	<version>1.0-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
 	<name>Hello Spring Function on Azure</name>
 
 	<parent>
-		<groupId>org.springframework.boot</groupId>
-		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>3.0.4</version>
-		<relativePath /> <!-- lookup parent from repository -->
+		<groupId>com.util.function</groupId>
+		<artifactId>function-parent</artifactId>
+		<version>1.0.0-SNAPSHOT</version>
+		<relativePath>../pom.xml</relativePath>
 	</parent>
 
 	<properties>
@@ -47,7 +45,7 @@
 			<artifactId>function-util</artifactId>
 			<version>1.0.0-SNAPSHOT</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-mongodb</artifactId>
@@ -78,7 +76,6 @@
 		<dependency>
 			<groupId>com.azure</groupId>
 			<artifactId>azure-identity</artifactId>
-			<version>1.15.3</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
@@ -89,14 +86,8 @@
 		<dependency>
 			<groupId>com.azure.resourcemanager</groupId>
 			<artifactId>azure-resourcemanager</artifactId>
-			<version>2.53.1</version>
 		</dependency>
-		
-<dependency>
-    <groupId>com.azure.resourcemanager</groupId>
-    <artifactId>azure-resourcemanager-costmanagement</artifactId>
-    <version>1.0.0</version>
-</dependency>
+
 	</dependencies>
 
 	<dependencyManagement>
@@ -202,6 +193,16 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+				<executions>
+					<execution>
+						<goals>
+							<goal>repackage</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<mainClass>com.belisty.function.CacheFunctionApplication</mainClass>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>
