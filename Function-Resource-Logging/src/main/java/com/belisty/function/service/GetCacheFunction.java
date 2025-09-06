@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 
 import com.belisty.function.model.GetCache;
 import com.belisty.function.repo.CacheRepo;
+import com.util.function.service.AzureTableLoggerService;
 
 import lombok.AllArgsConstructor;
 

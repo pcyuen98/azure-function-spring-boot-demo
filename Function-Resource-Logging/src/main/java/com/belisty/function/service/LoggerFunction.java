@@ -5,6 +5,8 @@ import java.util.function.Function;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
+import com.util.function.service.AzureTableLoggerService;
+
 import lombok.AllArgsConstructor;
 
 /**

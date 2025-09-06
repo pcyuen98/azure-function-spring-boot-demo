@@ -44,8 +44,8 @@
 
 		<dependency>
 			<groupId>com.util.function</groupId>
-			<artifactId>function_util</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
+			<artifactId>function-util</artifactId>
+			<version>1.0.0-SNAPSHOT</version>
 		</dependency>
 		
 		<dependency>

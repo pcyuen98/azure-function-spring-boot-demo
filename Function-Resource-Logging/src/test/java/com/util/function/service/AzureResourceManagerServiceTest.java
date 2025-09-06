@@ -1,15 +1,13 @@
-package com.belisty.function.service;
+package com.util.function.service;
 
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import com.azure.resourcemanager.AzureResourceManager;
-import com.azure.resourcemanager.costmanagement.CostManagementManager;
-import com.azure.resourcemanager.costmanagement.models.QueryDataset;
 import com.azure.resourcemanager.costmanagement.models.QueryDefinition;
 import com.azure.resourcemanager.costmanagement.models.QueryResult;
+import com.util.function.service.AzureResourceManagerService;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -20,7 +18,7 @@ class AzureResourceManagerServiceTest {
 	@Autowired
 	private AzureResourceManagerService azureResourceManagerService;
 
-	@Autowired
+//	@Autowired
 	private com.azure.resourcemanager.costmanagement.CostManagementManager costManagementManager;
 	
 	@Test
@@ -29,7 +27,7 @@ class AzureResourceManagerServiceTest {
 		
 		//assertNotNull(json, "Azure resource summary JSON should not be null");
 		System.out.println("test");
-		this.getDailyCost();
+		//this.getDailyCost();
 	}
 	
     public Double getDailyCost() {

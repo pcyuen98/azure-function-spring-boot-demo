@@ -13,6 +13,7 @@
 
     <modules>
         <module>function-util</module>
+		<module>Function-Resource-Logging</module>
     </modules>
 
     <properties>
