@@ -7,9 +7,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 		"com.util",
 		"com.belisty.function",
 	})
-public class CacheFunctionApplication {
+public class ResourceLoggingApplication {
 
     public static void main(String[] args) throws Exception {
-        SpringApplication.run(CacheFunctionApplication.class, args);
+        SpringApplication.run(ResourceLoggingApplication.class, args);
     }
 }

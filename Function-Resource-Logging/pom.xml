@@ -29,8 +29,6 @@
 		unique across Azure -->
 		<functionResourceGroup>java-test-function-resource-group777</functionResourceGroup>
 		<functionAppName>java-test-function-777</functionAppName>
-
-		<start-class>com.belisty.function.CacheFunctionApplication</start-class>
 	</properties>
 
 	<dependencies>
@@ -81,7 +79,6 @@
 		<dependency>
 			<groupId>com.azure</groupId>
 			<artifactId>azure-data-tables</artifactId>
-			<version>12.3.10</version>
 		</dependency>
 		<dependency>
 			<groupId>com.azure.resourcemanager</groupId>
@@ -156,7 +153,6 @@
 					<hostJson>${project.basedir}/src/main/azure/host.json</hostJson>
 					<localSettingsJson>
 						${project.basedir}/src/main/azure/local.settings.json</localSettingsJson>
-
 					<runtime>
 						<os>linux</os>
 						<javaVersion>17</javaVersion>
@@ -201,7 +197,7 @@
 					</execution>
 				</executions>
 				<configuration>
-					<mainClass>com.belisty.function.CacheFunctionApplication</mainClass>
+					<mainClass>com.belisty.function.ResourceLoggingApplication</mainClass>
 				</configuration>
 			</plugin>
 		</plugins>

@@ -86,6 +86,10 @@
               "value": "java"
             },
             {
+              "name": "MAIN_CLASS",
+              "value": "com.belisty.function.ResourceLoggingApplication"
+            },
+            {
               "name": "AzureWebJobsStorage",
               "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', parameters('storageAccountName'), ';AccountKey=', listKeys(resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName')), '2022-09-01').keys[0].value, ';EndpointSuffix=', environment().suffixes.storage)]"
             }

@@ -5,4 +5,5 @@ com\util\function\config\PropertyLogger.class
 com\demo\utility_classes\ResponseEntityUtil.class
 com\util\function\service\AzureTableLoggerService.class
 com\util\function\config\AzureTableLoggerInitializer.class
+com\util\FunctionUtilApplication.class
 com\util\function\service\AzureResourceManagerService.class
