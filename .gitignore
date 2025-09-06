@@ -35,3 +35,6 @@ bin/
 obj/
 target/
 .terraform/
+plan.tfplan
+terraform.tfstate
+.terraform.lock.hcl
