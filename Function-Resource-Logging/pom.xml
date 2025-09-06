@@ -1,205 +1,152 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-
-	<artifactId>cache</artifactId>
-	<packaging>jar</packaging>
-
-	<name>Hello Spring Function on Azure</name>
-
-	<parent>
-		<groupId>com.util.function</groupId>
-		<artifactId>function-parent</artifactId>
-		<version>1.0.0-SNAPSHOT</version>
-		<relativePath>../pom.xml</relativePath>
-	</parent>
-
-	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<maven.compiler.source>17</maven.compiler.source>
-		<maven.compiler.target>17</maven.compiler.target>
-
-		<azure.functions.maven.plugin.version>1.22.0</azure.functions.maven.plugin.version>
-		<azure.functions.java.library.version>3.0.0</azure.functions.java.library.version>
-		<spring.cloud.function.dependencies>4.0.0</spring.cloud.function.dependencies>
-
-		<!-- customize those five properties. The functionAppName should be
-		unique across Azure -->
-		<functionResourceGroup>java-test-function-resource-group777</functionResourceGroup>
-		<functionAppName>java-test-function-777</functionAppName>
-	</properties>
-
-	<dependencies>
-		<dependency>
-			<groupId>org.projectlombok</groupId>
-			<artifactId>lombok</artifactId>
-			<optional>true</optional>
-		</dependency>
-
-		<dependency>
+	<?xml version="1.0" encoding="UTF-8"?>
+	<project xmlns="http://maven.apache.org/POM/4.0.0"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+		<modelVersion>4.0.0</modelVersion>
+	
+		<artifactId>resource-logging</artifactId>
+		<packaging>jar</packaging>
+	
+		<name>Resource Logging Demo Function on Azure</name>
+	
+		<parent>
 			<groupId>com.util.function</groupId>
-			<artifactId>function-util</artifactId>
+			<artifactId>function-parent</artifactId>
 			<version>1.0.0-SNAPSHOT</version>
-		</dependency>
-
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-data-mongodb</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>org.springframework.cloud</groupId>
-			<artifactId>spring-cloud-function-adapter-azure</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.cloud</groupId>
-			<artifactId>spring-cloud-starter-function-webflux</artifactId>
-			<scope>provided</scope>
-		</dependency>
-
-		<!-- Test -->
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-test</artifactId>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.junit.jupiter</groupId>
-			<artifactId>junit-jupiter-api</artifactId>
-			<scope>test</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>com.azure</groupId>
-			<artifactId>azure-identity</artifactId>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
-			<groupId>com.azure</groupId>
-			<artifactId>azure-data-tables</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>com.azure.resourcemanager</groupId>
-			<artifactId>azure-resourcemanager</artifactId>
-		</dependency>
-
-	</dependencies>
-
-	<dependencyManagement>
+			<relativePath>../pom.xml</relativePath>
+		</parent>
+	
+		<properties>
+			<!-- customize those five properties. The functionAppName should be
+			unique across Azure -->
+			<functionResourceGroup>java-test-function-resource-group777</functionResourceGroup>
+			<functionAppName>java-test-function-777</functionAppName>
+		</properties>
+	
 		<dependencies>
 			<dependency>
+				<groupId>org.projectlombok</groupId>
+				<artifactId>lombok</artifactId>
+				<optional>true</optional>
+			</dependency>
+	
+			<dependency>
+				<groupId>com.util.function</groupId>
+				<artifactId>function-util</artifactId>
+				<version>1.0.0-SNAPSHOT</version>
+			</dependency>
+	
+			<dependency>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-starter-data-mongodb</artifactId>
+			</dependency>
+	
+			<dependency>
 				<groupId>org.springframework.cloud</groupId>
-				<artifactId>spring-cloud-function-dependencies</artifactId>
-				<version>${spring.cloud.function.dependencies}</version>
-				<type>pom</type>
-				<scope>import</scope>
+				<artifactId>spring-cloud-function-adapter-azure</artifactId>
 			</dependency>
 			<dependency>
-				<groupId>com.microsoft.azure.functions</groupId>
-				<artifactId>azure-functions-java-library</artifactId>
-				<version>${azure.functions.java.library.version}</version>
+				<groupId>org.springframework.cloud</groupId>
+				<artifactId>spring-cloud-starter-function-webflux</artifactId>
+				<scope>provided</scope>
 			</dependency>
+	
+			<!-- Test -->
+			<dependency>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-starter-test</artifactId>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.junit.jupiter</groupId>
+				<artifactId>junit-jupiter-api</artifactId>
+				<scope>test</scope>
+			</dependency>
+	
+			<dependency>
+				<groupId>com.azure</groupId>
+				<artifactId>azure-identity</artifactId>
+				<scope>compile</scope>
+			</dependency>
+			<dependency>
+				<groupId>com.azure</groupId>
+				<artifactId>azure-data-tables</artifactId>
+			</dependency>
+			<dependency>
+				<groupId>com.azure.resourcemanager</groupId>
+				<artifactId>azure-resourcemanager</artifactId>
+			</dependency>
+	
 		</dependencies>
-	</dependencyManagement>
+	
+		<dependencyManagement>
+			<dependencies>
+				<dependency>
+					<groupId>org.springframework.cloud</groupId>
+					<artifactId>spring-cloud-function-dependencies</artifactId>
+					<version>${spring.cloud.function.dependencies}</version>
+					<type>pom</type>
+					<scope>import</scope>
+				</dependency>
+				<dependency>
+					<groupId>com.microsoft.azure.functions</groupId>
+					<artifactId>azure-functions-java-library</artifactId>
+					<version>${azure.functions.java.library.version}</version>
+				</dependency>
+			</dependencies>
+		</dependencyManagement>
+	
+		<build>
 
-	<build>
-		<pluginManagement>
 			<plugins>
 				<plugin>
 					<groupId>com.microsoft.azure</groupId>
 					<artifactId>azure-functions-maven-plugin</artifactId>
-					<version>${azure.functions.maven.plugin.version}</version>
-				</plugin>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-resources-plugin</artifactId>
-					<version>3.3.0</version>
-				</plugin>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-dependency-plugin</artifactId>
-					<version>3.4.0</version>
-				</plugin>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-clean-plugin</artifactId>
-				</plugin>
-				<plugin>
-					<groupId>io.gatling</groupId>
-					<artifactId>gatling-maven-plugin</artifactId>
-					<version>4.1.5</version>
 					<configuration>
-						<includes>
-							<include>com.example.loadtest.*</include>
-						</includes>
+						<resourceGroup>${functionResourceGroup}</resourceGroup>
+						<appName>${functionAppName}</appName>
+						<region>${functionAppRegion}</region>
+						<appServicePlanName>${functionAppServicePlanName}</appServicePlanName>
+						<pricingTier>${functionPricingTier}</pricingTier>
+	
+						<hostJson>${project.basedir}/src/main/azure/host.json</hostJson>
+						<localSettingsJson>
+							${project.basedir}/src/main/azure/local.settings.json</localSettingsJson>
+						<runtime>
+							<os>linux</os>
+							<javaVersion>17</javaVersion>
+						</runtime>
+						<appSettings>
+							<!-- Run Azure Function from package file by default -->
+							<property>
+								<name>FUNCTIONS_EXTENSION_VERSION</name>
+								<value>~4</value>
+							</property>
+						</appSettings>
+					</configuration>
+					<executions>
+						<execution>
+							<id>package-functions</id>
+							<goals>
+								<goal>package</goal>
+							</goals>
+						</execution>
+					</executions>
+				</plugin>
+				<plugin>
+					<groupId>org.springframework.boot</groupId>
+					<artifactId>spring-boot-maven-plugin</artifactId>
+					<executions>
+						<execution>
+							<goals>
+								<goal>repackage</goal>
+							</goals>
+						</execution>
+					</executions>
+					<configuration>
+						<mainClass>com.belisty.function.ResourceLoggingApplication</mainClass>
 					</configuration>
 				</plugin>
 			</plugins>
-		</pluginManagement>
-
-		<plugins>
-			<plugin>
-				<groupId>com.microsoft.azure</groupId>
-				<artifactId>azure-functions-maven-plugin</artifactId>
-				<configuration>
-					<resourceGroup>${functionResourceGroup}</resourceGroup>
-					<appName>${functionAppName}</appName>
-					<region>${functionAppRegion}</region>
-					<appServicePlanName>${functionAppServicePlanName}</appServicePlanName>
-					<pricingTier>${functionPricingTier}</pricingTier>
-
-					<hostJson>${project.basedir}/src/main/azure/host.json</hostJson>
-					<localSettingsJson>
-						${project.basedir}/src/main/azure/local.settings.json</localSettingsJson>
-					<runtime>
-						<os>linux</os>
-						<javaVersion>17</javaVersion>
-					</runtime>
-					<appSettings>
-						<!-- Run Azure Function from package file by default -->
-						<property>
-							<name>FUNCTIONS_EXTENSION_VERSION</name>
-							<value>~4</value>
-						</property>
-					</appSettings>
-				</configuration>
-				<executions>
-					<execution>
-						<id>package-functions</id>
-						<goals>
-							<goal>package</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-			<!--Remove obj folder generated by .NET SDK in maven clean-->
-			<plugin>
-				<artifactId>maven-clean-plugin</artifactId>
-				<version>3.2.0</version>
-				<configuration>
-					<filesets>
-						<fileset>
-							<directory>obj</directory>
-						</fileset>
-					</filesets>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-				<executions>
-					<execution>
-						<goals>
-							<goal>repackage</goal>
-						</goals>
-					</execution>
-				</executions>
-				<configuration>
-					<mainClass>com.belisty.function.ResourceLoggingApplication</mainClass>
-				</configuration>
-			</plugin>
-		</plugins>
-	</build>
-</project>
+		</build>
+	</project>
