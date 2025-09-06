@@ -7,7 +7,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import com.azure.resourcemanager.AzureResourceManager;
 import com.azure.resourcemanager.costmanagement.models.QueryDefinition;
 import com.azure.resourcemanager.costmanagement.models.QueryResult;
-import com.util.function.service.AzureResourceManagerService;
 
 import lombok.extern.slf4j.Slf4j;
 
