@@ -78,24 +78,7 @@
 			</dependency>
 	
 		</dependencies>
-	
-		<dependencyManagement>
-			<dependencies>
-				<dependency>
-					<groupId>org.springframework.cloud</groupId>
-					<artifactId>spring-cloud-function-dependencies</artifactId>
-					<version>${spring.cloud.function.dependencies}</version>
-					<type>pom</type>
-					<scope>import</scope>
-				</dependency>
-				<dependency>
-					<groupId>com.microsoft.azure.functions</groupId>
-					<artifactId>azure-functions-java-library</artifactId>
-					<version>${azure.functions.java.library.version}</version>
-				</dependency>
-			</dependencies>
-		</dependencyManagement>
-	
+
 		<build>
 
 			<plugins>
