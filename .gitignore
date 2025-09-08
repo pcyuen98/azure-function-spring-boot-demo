@@ -35,6 +35,5 @@ bin/
 obj/
 target/
 .terraform/
-*.tfplan
 *.tfstate
 *.hcl
