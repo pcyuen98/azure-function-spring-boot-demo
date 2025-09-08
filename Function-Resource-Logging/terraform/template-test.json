@@ -107,7 +107,7 @@
       "properties": {
         "containerDeleteRetentionPolicy": {
           "enabled": true,
-          "days": 3
+          "days": 1
         },
         "cors": {
           "corsRules": []
@@ -115,7 +115,7 @@
         "deleteRetentionPolicy": {
           "allowPermanentDelete": true,
           "enabled": true,
-          "days": 2
+          "days": 1
         }
       }
     }
