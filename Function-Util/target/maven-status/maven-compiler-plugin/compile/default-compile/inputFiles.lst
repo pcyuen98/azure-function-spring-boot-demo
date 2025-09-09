@@ -1,9 +1,0 @@
-D:\workspace\azure-function-spring-boot-demo\Function-Util\src\main\java\com\util\function\service\HistoryHandler.java
-D:\workspace\azure-function-spring-boot-demo\Function-Util\src\main\java\com\util\FunctionUtilApplication.java
-D:\workspace\azure-function-spring-boot-demo\Function-Util\src\main\java\com\util\function\config\AzureTableLoggerInitializer.java
-D:\workspace\azure-function-spring-boot-demo\Function-Util\src\main\java\com\demo\utility_classes\ResponseEntityUtil.java
-D:\workspace\azure-function-spring-boot-demo\Function-Util\src\main\java\com\util\function\service\AzureTableLoggerService.java
-D:\workspace\azure-function-spring-boot-demo\Function-Util\src\main\java\com\util\function\service\HistoryFunction.java
-D:\workspace\azure-function-spring-boot-demo\Function-Util\src\main\java\com\util\function\service\AzureResourceManagerService.java
-D:\workspace\azure-function-spring-boot-demo\Function-Util\src\main\java\com\util\function\config\BeanLogger.java
-D:\workspace\azure-function-spring-boot-demo\Function-Util\src\main\java\com\util\function\config\PropertyLogger.java
