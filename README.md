@@ -50,6 +50,6 @@ terraform plan -out plan.tfplan
 terraform apply plan.tfplan
 
 cd ..
-mvn clean package azure-functions:deploy```
+mvn clean package azure-functions:deploy ```
 
 ### Note: If deployment successful, a list of the Function Restful API will be displayed.
