@@ -39,3 +39,5 @@ obj/
 *.backup
 Function-Mongo/
 Function-Util/target
+Function-Resource-Logging/target
+Function-Resource-Logging/logs

@@ -25,3 +25,31 @@ The application is structured into two main components:
 To get started with this project, you will need to clone the repository and configure your Azure environment. Detailed instructions for each component can be found within their respective subdirectories.
 
 This README is designed to give a high-level overview. Feel free to explore the code to see how these technologies are implemented.
+
+## Other Useful Services of the Demo App
+
+- **Terraform Setting**: It only deployed the basic function of the function app. Log Analytic is disabled as it may cost tremendous charging if not careful. This is mentioned in this Reddit thread: https://www.reddit.com/r/AZURE/comments/en664s/how_azure_application_insights_cost_our_company/.
+
+- **Retention**: Retention of the storage is limited to 1 day. Azure charges based on quantity used, so the lesser data retention, the lesser the possible charges.
+
+- **Logging**: Logging is stored inside an Azure storage table instead of analytic storage managed by AI.
+
+- **Security**: Automatically configures the security identity to manage the Azure Function App Resources.
+
+- **Shutdown Service**: A shutdown service is available and is useful to turn it off when not using it.
+
+## How to Run
+
+### Build the project
+```bash
+mvn clean install
+
+cd Function-Resource-Logging/terraform
+terraform init
+terraform plan -out plan.tfplan
+terraform apply plan.tfplan
+
+cd ..
+mvn clean package azure-functions:deploy```
+
+### Note: If deployment successful, a list of the Function Restful API will be displayed.
