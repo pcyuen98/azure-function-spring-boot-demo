@@ -40,16 +40,34 @@ This README is designed to give a high-level overview. Feel free to explore the 
 
 ## How to Run
 
-### Build the project
+To run and deploy this application, follow these steps:
+
+### 1. Build the Project
+
+First, build the entire project using Maven:
+
 ```bash
 mvn clean install
+```
 
+### 2. Deploy Infrastructure with Terraform
+
+Next, navigate to the `Function-Resource-Logging/terraform` directory and deploy your Azure infrastructure.
+
+```bash
 cd Function-Resource-Logging/terraform
 terraform init
 terraform plan -out plan.tfplan
 terraform apply plan.tfplan
+```
 
+### 3. Deploy the Function App
+
+Finally, navigate back to the `Function-Resource-Logging` directory and deploy the function app to Azure:
+
+```bash
 cd ..
-mvn clean package azure-functions:deploy ```
+mvn clean package azure-functions:deploy
+```
 
 ### Note: If deployment successful, a list of the Function Restful API will be displayed.
