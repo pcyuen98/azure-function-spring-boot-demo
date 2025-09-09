@@ -1,4 +1,4 @@
-# Azure Demo Application
+# Azure Function App Demo Application
 
 <p align="center">
 <img src="/pic/azure.png" alt="Azure Logo" width="460" height="300">
@@ -16,7 +16,7 @@ The application is structured into two main components:
 
   * **Terraform Deployment**: Demonstrates a complete infrastructure-as-code workflow for provisioning Azure resources.
 
-  * **Azure Storage Usage**: Illustrates how to interact with Azure Storage services (e.g., Azure Table Storage) for data persistence.
+  * **Azure Storage Usage**: In traditional Spring Booot @Slf4j, the file stored inside the server say /log/application.log but Azure Function app serverless will destroy the instance and the files after a cold start. In order to store this, Azure has it own storage. This how to interact with Azure Storage services to store the log file(e.g., Azure Table Storage) for data persistence. 
 
   * **Azure Resource Management**: Showcases how to use Azure Resource Manager to manage and interact with other Azure services from within the function.
 
