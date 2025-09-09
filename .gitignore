@@ -37,4 +37,5 @@ obj/
 *.tfstate
 *.hcl
 *.backup
+Function-Mongo/
 Function-Util/target
