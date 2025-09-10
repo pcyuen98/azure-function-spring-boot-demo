@@ -12,7 +12,7 @@
 
 - **Resource Manager**: Manage resources as a Spring Service such as instance ID, storage connection ID, stop/start services from application context
 
-- **Shutdown Service**: A shutdown service is available and is useful to turn it off when not using it.
+- **Shutdown Service**: A shutdown service is available and useful to turn off resources when they are not in use. Otherwise, Azure AI may automatically charge you unexpectedly when you're not the using the service.
 
 ## How to Run
 
