@@ -20,9 +20,11 @@ To run and deploy this application, follow these steps:
 
 ### 1. Build the Project
 
-First, build the entire project using Maven:
+First, login to Azure portal and build the entire project using Maven:
 
 ```bash
+az login
+
 mvn clean install
 ```
 
