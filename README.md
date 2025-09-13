@@ -4,7 +4,28 @@
 <img src="/pic/azure.png" alt="Azure Logo" width="460" height="300">
 </p>
 
-## Overview
+## ⚠️ Cost Considerations on Azure Functions
+
+Azure Functions includes a **free monthly grant**:
+
+- **Execution Time**: 400,000 GB-s free per month  
+  ($0.000016/GB-s thereafter, pay-as-you-go)  
+- **Total Executions**: 1 million executions free per month  
+  ($0.20 per additional million executions)
+
+📌 **Important Notes:**
+- A **Storage Account** is created by default with each Functions app.  
+  This storage account is **not included** in the free grant. Standard storage and networking charges apply.  
+- By default, **Application Insights** is enabled, which can result in unexpected high costs if not carefully managed.  
+  - Reference: [Azure Pricing – Functions](https://azure.microsoft.com/en-us/pricing/details/functions/)  
+  - Real-world case: [Reddit discussion](https://www.reddit.com/r/AZURE/comments/en664s/how_azure_application_insights_cost_our_company/)
+
+### Our Approach
+To avoid unexpected charges:
+- **Application Insights is disabled by default** in this project.  
+- **Table Storage** is used for logging instead of Application Insights.  
+
+This ensures lower and more predictable costs while running Azure Functions.
 
 This repository contains a demonstration application built on the Azure cloud platform. The project is designed to showcase the integration of various Azure services, with a specific focus on **Azure Functions**, **Azure Storage**, and **Azure Resource Management** (ARM) through **Terraform** deployments.
 
