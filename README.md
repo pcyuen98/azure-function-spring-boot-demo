@@ -14,12 +14,6 @@ The application is structured into two main components:
 
 * **Function-Resource-Logging**: The core Azure Function App. This project highlights the following capabilities:
 
-  * **Terraform Deployment**: Demonstrates a complete infrastructure-as-code workflow for provisioning Azure resources.
-
-  * **Azure Storage Usage**: In traditional Spring Booot @Slf4j, the file stored inside the server say /log/application.log but Azure Function app serverless will destroy the instance and the files after a cold start. In order to store this, Azure has it own storage. This demo app will demostrate to interact with Azure Storage services to store the log file(e.g., Azure Table Storage) for data persistence. 
-
-  * **Azure Resource Management**: Showcases how to use Azure Resource Manager to manage and interact with other Azure services from within the function.
-
   * **⚠️ Cost Considerations on Azure Functions**:
 
 	Azure Functions includes a **free monthly grant**:
@@ -41,6 +35,11 @@ The application is structured into two main components:
 	 - **Application Insights is disabled by default** in this project.  
 	 - **Table Storage** is used for logging instead of Application Insights.  
 
+  * **Terraform Deployment**: Demonstrates a complete infrastructure-as-code workflow for provisioning Azure resources.
+
+  * **Azure Storage Usage**: In traditional Spring Booot @Slf4j, the file stored inside the server say /log/application.log but Azure Function app serverless will destroy the instance and the files after a cold start. In order to store this, Azure has it own storage. This demo app will demostrate to interact with Azure Storage services to store the log file(e.g., Azure Table Storage) for data persistence. 
+
+  * **Azure Resource Management**: Showcases how to use Azure Resource Manager to manage and interact with other Azure services from within the function.
 ### Getting Started
 
 To get started with this project, you will need to clone the repository and configure your Azure environment. Detailed instructions for each component can be found within their respective subdirectories.
