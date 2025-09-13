@@ -20,9 +20,9 @@ The application is structured into two main components:
 
   * **Azure Resource Management**: Showcases how to use Azure Resource Manager to manage and interact with other Azure services from within the function.
 
-* **⚠️ Cost Considerations on Azure Functions**:
+  * **⚠️ Cost Considerations on Azure Functions**:
 
-Azure Functions includes a **free monthly grant**:
+	Azure Functions includes a **free monthly grant**:
 
 - **Execution Time**: 400,000 GB-s free per month  
   ($0.000016/GB-s thereafter, pay-as-you-go)  
@@ -36,7 +36,7 @@ Azure Functions includes a **free monthly grant**:
   - Reference: [Azure Pricing – Functions](https://azure.microsoft.com/en-us/pricing/details/functions/)  
   - Real-world case: [Reddit discussion](https://www.reddit.com/r/AZURE/comments/en664s/how_azure_application_insights_cost_our_company/)
 
-* ** Our Approach**:
+  * ** Our Approach**:
 To avoid unexpected charges:
 - **Application Insights is disabled by default** in this project.  
 - **Table Storage** is used for logging instead of Application Insights.  
