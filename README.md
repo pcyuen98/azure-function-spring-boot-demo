@@ -24,12 +24,12 @@ The application is structured into two main components:
 
 	Azure Functions includes a **free monthly grant**:
 
-- **Execution Time**: 400,000 GB-s free per month  
-  ($0.000016/GB-s thereafter, pay-as-you-go)  
-- **Total Executions**: 1 million executions free per month  
-  ($0.20 per additional million executions)
+	- **Execution Time**: 400,000 GB-s free per month  
+	($0.000016/GB-s thereafter, pay-as-you-go)  
+	- **Total Executions**: 1 million executions free per month  
+	($0.20 per additional million executions)
 
-📌 **Important Notes:**
+	📌 **Important Notes:**
 - A **Storage Account** is created by default with each Functions app.  
   This storage account is **not included** in the free grant. Standard storage and networking charges apply.  
 - By default, **Application Insights** is enabled, which can result in unexpected high costs if not carefully managed.  
