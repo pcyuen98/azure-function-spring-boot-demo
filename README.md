@@ -30,16 +30,16 @@ The application is structured into two main components:
 	($0.20 per additional million executions)
 
 	📌 **Important Notes:**
-- A **Storage Account** is created by default with each Functions app.  
-  This storage account is **not included** in the free grant. Standard storage and networking charges apply.  
-- By default, **Application Insights** is enabled, which can result in unexpected high costs if not carefully managed.  
-  - Reference: [Azure Pricing – Functions](https://azure.microsoft.com/en-us/pricing/details/functions/)  
-  - Real-world case: [Reddit discussion](https://www.reddit.com/r/AZURE/comments/en664s/how_azure_application_insights_cost_our_company/)
+	 - A **Storage Account** is created by default with each Functions app.  
+	   This storage account is **not included** in the free grant. Standard storage and networking charges apply.  
+	 - By default, **Application Insights** is enabled, which can result in unexpected high costs if not carefully managed.  
+		- Reference: [Azure Pricing – Functions](https://azure.microsoft.com/en-us/pricing/details/functions/)  
+		- Real-world case: [Reddit discussion](https://www.reddit.com/r/AZURE/comments/en664s/how_azure_application_insights_cost_our_company/)
 
   * ** Our Approach**:
-To avoid unexpected charges:
-- **Application Insights is disabled by default** in this project.  
-- **Table Storage** is used for logging instead of Application Insights.  
+     To avoid unexpected charges:
+	 - **Application Insights is disabled by default** in this project.  
+	 - **Table Storage** is used for logging instead of Application Insights.  
 
 ### Getting Started
 
