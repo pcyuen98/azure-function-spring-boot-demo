@@ -12,7 +12,7 @@
     <name>Function Parent</name>
 
     <modules>
-        <module>Function-util</module>
+        <module>Function-Util</module>
 		<module>Function-Resource-Logging</module>
     </modules>
 
