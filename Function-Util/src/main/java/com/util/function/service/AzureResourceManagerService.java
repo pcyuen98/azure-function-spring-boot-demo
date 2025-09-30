@@ -16,6 +16,7 @@ import com.azure.resourcemanager.storage.models.StorageAccountKey;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 
+import jakarta.annotation.PostConstruct;
 import lombok.Data;
 
 @Data
@@ -89,4 +90,12 @@ public class AzureResourceManagerService {
 		}
 		return json; // return JSON string instead of raw name
 	}
+	
+    @PostConstruct
+    public void configureAzureStorage() {
+        initialize();
+        String connectionString = getStorageConnectionString();
+        System.setProperty("AzureWebJobsStorage", connectionString);
+        //loggerService.info("Configured AzureWebJobsStorage dynamically for Function runtime.");
+    }
 }
