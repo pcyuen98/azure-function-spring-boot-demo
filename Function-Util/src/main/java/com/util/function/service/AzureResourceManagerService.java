@@ -12,6 +12,7 @@ import com.azure.core.management.profile.AzureProfile;
 import com.azure.identity.DefaultAzureCredentialBuilder;
 import com.azure.resourcemanager.AzureResourceManager;
 import com.azure.resourcemanager.appservice.models.FunctionApp;
+import com.azure.resourcemanager.resources.fluentcore.arm.ResourceId;
 import com.azure.resourcemanager.storage.models.StorageAccountKey;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
@@ -63,6 +64,13 @@ public class AzureResourceManagerService {
 		return "ok";
 	}
 
+	public String stopAzureService(String resourceName, String functionName) {
+		FunctionApp functionApp = getAzure().functionApps().getByResourceGroup(getRg(), getFunctionName());
+		loggerService.info("Stopping Azure " + resourceName +  "/" + functionName );
+		functionApp.stop();
+		return "ok";
+	}
+	
 	public String getAzureResourceSummary(String clientIp) {
 		FunctionApp functionApp = getAzure().functionApps().getByResourceGroup(getRg(), getFunctionName());
 
@@ -97,5 +105,19 @@ public class AzureResourceManagerService {
         String connectionString = getStorageConnectionString();
         System.setProperty("AzureWebJobsStorage", connectionString);
         //loggerService.info("Configured AzureWebJobsStorage dynamically for Function runtime.");
+    }
+    
+    public FunctionApp getFunctionAppById(String resourceId) {
+        // Parse the resourceId (extracts subscription, rg, provider, type, and name)
+        ResourceId parsedId = ResourceId.fromString(resourceId);
+
+        if (!"Microsoft.Web".equalsIgnoreCase(parsedId.providerNamespace()) ||
+            !"sites".equalsIgnoreCase(parsedId.resourceType())) {
+            throw new IllegalArgumentException("ResourceId does not point to a Function App");
+        }
+
+        // Get the FunctionApp (sites = can be WebApp or FunctionApp; SDK resolves type automatically)
+        return azure.functionApps()
+                .getByResourceGroup(parsedId.resourceGroupName(), parsedId.name());
     }
 }

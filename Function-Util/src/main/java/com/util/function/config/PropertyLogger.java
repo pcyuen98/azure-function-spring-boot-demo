@@ -18,6 +18,7 @@ public class PropertyLogger implements CommandLineRunner {
 
     // Constants for property filtering
     private static final String SPRING_PREFIX = "spring.";
+    private static final String AZURE_PREFIX = "azure.";
     private static final String SENSITIVE_VALUE_MASK = "[SENSITIVE VALUE]";
     private static final Set<String> SENSITIVE_KEYWORDS = Set.of("password", "secret", "credential", "token", "key"); // Added more keywords
 
@@ -40,7 +41,7 @@ public class PropertyLogger implements CommandLineRunner {
 
                 Arrays.stream(eps.getPropertyNames())
                       .sorted() // Sort for better readability
-                      .filter(propName -> propName.startsWith(SPRING_PREFIX)) // Filter for "spring." prefix
+                      .filter(propName -> propName.startsWith(SPRING_PREFIX) || propName.startsWith(AZURE_PREFIX) ) // Filter for "spring." prefix
                       .forEach(propName -> {
                           String propertyValue = environment.getProperty(propName);
                           // Check if the property name contains any sensitive keywords (case-insensitive)

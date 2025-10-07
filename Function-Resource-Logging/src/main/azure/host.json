@@ -5,15 +5,17 @@
     "version": "[4.*, 5.0.0)"
   },
   "functionTimeout": "00:10:00",
-    "logging": {
+  "logging": {
     "LogLevel": {
-      "Default": "Error",
-      "Microsoft": "None",
-      "Function": "Information"
+      "Default": "Trace",
+      "Host": "Trace",
+      "Function": "Trace",
+      "Microsoft": "Trace",
+      "Worker": "Trace"
     },
     "applicationInsights": {
       "LogLevel": {
-        "Default": "None"
+        "Default": "Trace"
       }
     },
     "samplingSettings": {
