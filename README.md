@@ -1,67 +1,99 @@
-# Azure Function App Demo Application
+# ☁️ Azure Function App Demo Application
 
 <p align="center">
-<img src="/pic/azure.png" alt="Azure Logo" width="460" height="300">
+  <img src="/pic/azure.png" alt="Azure Logo" width="460" height="300">
 </p>
 
-This ensures lower and more predictable costs while running Azure Functions.
+This demo showcases how to run **Azure Functions** efficiently while keeping costs predictable and low.  
+It integrates **Azure Functions**, **Azure Storage**, and **Azure Resource Management (ARM)**, all deployed through **Terraform**.
 
-This repository contains a demonstration application built on the Azure cloud platform. The project is designed to showcase the integration of various Azure services, with a specific focus on **Azure Functions**, **Azure Storage**, and **Azure Resource Management** (ARM) through **Terraform** deployments.
+---
 
-The application is structured into two main components:
+## 🧩 Project Structure
 
-* **Function-Util**: A shared utility project that contains common code and libraries used by the main application. This promotes code reuse and maintains a clean separation of concerns.
+The application consists of **Three main components**:
 
-* **Function-Resource-Logging**: The core Azure Function App. This project highlights the following capabilities:
+### **1. Function-Util**
+A shared utility module that contains common classes and libraries.  
+This promotes **code reuse** and **clean separation of concerns** across projects.
 
-  * **⚠️ Cost Considerations on Azure Functions**:
+---
 
-	Azure Functions includes a **free monthly grant**:
+### **2. Function-Resource-Logging**
+The **core Azure Function App**, demonstrating the following capabilities:
 
-	- **Execution Time**: 400,000 GB-s free per month  
-	($0.000016/GB-s thereafter, pay-as-you-go)  
-	- **Total Executions**: 1 million executions free per month  
-	($0.20 per additional million executions)
+#### ⚠️ Cost Considerations for Azure Functions
 
-	📌 **Important Notes:**
-	 - A **Storage Account** is created by default with each Functions app.  
-	   This storage account is **not included** in the free grant. Standard storage and networking charges apply.  
-	 - By default, **Application Insights** is enabled, which can result in unexpected high costs if not carefully managed.  
-		- Reference: [Azure Pricing – Functions](https://azure.microsoft.com/en-us/pricing/details/functions/)  
-		- Real-world case: [Reddit discussion](https://www.reddit.com/r/AZURE/comments/en664s/how_azure_application_insights_cost_our_company/)
+Azure Functions offer a **free monthly usage grant**:
 
-    **Our Approach**:
-     To avoid unexpected charges:
-	 - **Application Insights is disabled by default** in this project.  
-	 - **Table Storage** is used for logging instead of Application Insights.  
+| Metric | Free Tier | Cost Beyond Free |
+|---------|------------|------------------|
+| Execution Time | 400,000 GB-s | $0.000016/GB-s |
+| Total Executions | 1 million | $0.20 per additional million |
 
-  * **Terraform Deployment**: Demonstrates a complete infrastructure-as-code workflow for provisioning Azure resources.
+📌 **Important Notes:**
+- A **Storage Account** is automatically created with each Function App.  
+  This **is not covered** by the free grant — standard storage/networking charges apply.
+- **Application Insights** is **enabled by default** and may cause **unexpected costs** if left unchecked.
+  - **Reference:** [Azure Functions Pricing](https://azure.microsoft.com/en-us/pricing/details/functions/)  
+  - **Example:** [Reddit Case – Unexpected Insight Costs](https://www.reddit.com/r/AZURE/comments/en664s/how_azure_application_insights_cost_our_company/)
 
-  * **Azure Storage Usage**: In traditional Spring Booot @Slf4j, the file stored inside the server say /log/application.log but Azure Function app serverless will destroy the instance and the files after a cold start. In order to store this, Azure has it own storage. This demo app will demostrate to interact with Azure Storage services to store the log file(e.g., Azure Table Storage) for data persistence. 
+#### 💡 Our Approach
+To prevent unexpected billing:
+- **Application Insights is disabled by default.**  
+- **Azure Table Storage** is used for logging instead.
 
-  * **Azure Resource Management**: Showcases how to use Azure Resource Manager to manage and interact with other Azure services from within the function.
-  
-* **Function-Costing**: The Costing Azure Function App due to the risk mentioned above. This project highlights the following capabilities:
+#### 🧱 Terraform Deployment
+Demonstrates full **Infrastructure-as-Code (IaC)** provisioning of Azure resources via Terraform.
 
-  * **Costing Notification via Email**
-  <p align="center">
-<img src="/pic/Costing-Email.jpeg" alt="Azure Costing" width="460" height="800">
+#### 📂 Azure Storage Integration
+Traditional Spring Boot logging writes to `application.log` within the server filesystem.  
+However, **Azure Functions** are **serverless** — instances are ephemeral, and files are lost on cold starts.
+
+✅ This project stores logs persistently in **Azure Storage (e.g., Table Storage)** for reliability and traceability.
+
+#### ⚙️ Azure Resource Management
+Demonstrates interaction with **Azure Resource Manager (ARM)** to control and monitor Azure services dynamically.
+
+---
+
+### **3. Function-Costing**
+A separate Azure Function project designed to **monitor and control resource costs**.
+
+#### ✉️ Costing Notification via Email
+Sends detailed **daily or hourly cost reports** via email using **EngageLab API**.
+
+<p align="center">
+  <img src="/pic/Costing-Email.jpeg" alt="Azure Costing Email Example" width="460" height="800">
 </p>
 
-  * **Configurable Auto Function Shutdown if limit hits (This feature not available on Azure Portal) **
-  
-  
+#### 🔌 Auto Function Shutdown (Beyond Portal Capability)
+Automatically **shuts down a function** when cost or API usage exceeds configurable thresholds.  
+*(This feature is not available through the Azure Portal by default.)*
 
-### Getting Started
+---
 
-To get started with this project, you will need to clone the repository and configure your Azure environment. Detailed instructions for each component can be found within their respective subdirectories.
+## 🚀 Getting Started
 
-This README is designed to give a high-level overview. Feel free to explore the code to see how these technologies are implemented.
+To start using this project:
 
-# Check out here for more info
-https://github.com/pcyuen98/azure-function-spring-boot-demo/tree/main/Function-Resource-Logging
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/pcyuen98/azure-function-spring-boot-demo.git
+   ```
 
-https://github.com/pcyuen98/azure-function-spring-boot-demo/tree/main/Function-Costing
+2. **Configure your Azure environment**
+   Each subproject (`Function-Resource-Logging`, `Function-Costing`, etc.) includes its own setup guide and `application.properties` file.
 
+3. **Build and deploy with Maven + Terraform**
+   Follow instructions in the respective subproject README files.
 
+---
 
+## 📘 Additional Resources
+
+🔗 **Function Resource Logging:**  
+[https://github.com/pcyuen98/azure-function-spring-boot-demo/tree/main/Function-Resource-Logging](https://github.com/pcyuen98/azure-function-spring-boot-demo/tree/main/Function-Resource-Logging)
+
+🔗 **Function Costing:**  
+[https://github.com/pcyuen98/azure-function-spring-boot-demo/tree/main/Function-Costing](https://github.com/pcyuen98/azure-function-spring-boot-demo/tree/main/Function-Costing)
