@@ -40,6 +40,18 @@ The application is structured into two main components:
   * **Azure Storage Usage**: In traditional Spring Booot @Slf4j, the file stored inside the server say /log/application.log but Azure Function app serverless will destroy the instance and the files after a cold start. In order to store this, Azure has it own storage. This demo app will demostrate to interact with Azure Storage services to store the log file(e.g., Azure Table Storage) for data persistence. 
 
   * **Azure Resource Management**: Showcases how to use Azure Resource Manager to manage and interact with other Azure services from within the function.
+  
+* **Function-Costing**: The Costing Azure Function App due to the risk mentioned above. This project highlights the following capabilities:
+
+  * **Costing Notification via Email**
+  <p align="center">
+<img src="/pic/Costing-Email.jpeg" alt="Azure Costing" width="460" height="300">
+</p>
+
+  * **Configurable Auto Function Shutdown if limit hits**
+  
+  
+
 ### Getting Started
 
 To get started with this project, you will need to clone the repository and configure your Azure environment. Detailed instructions for each component can be found within their respective subdirectories.
@@ -48,6 +60,8 @@ This README is designed to give a high-level overview. Feel free to explore the 
 
 # Check out here for more info
 https://github.com/pcyuen98/azure-function-spring-boot-demo/tree/main/Function-Resource-Logging
+
+https://github.com/pcyuen98/azure-function-spring-boot-demo/tree/main/Function-Costing
 
 
 
