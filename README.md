@@ -69,7 +69,7 @@ Sends detailed **daily or hourly cost reports** via email using **EngageLab API*
 
 #### 🔌 Auto Function Shutdown (Beyond Portal Capability)
 Automatically **shuts down a function** when cost or API usage exceeds configurable thresholds.  
-*(This feature is not available through the Azure Portal by default.)*
+*(This feature is not available through the Azure Portal.)*
 
 ---
 
