@@ -45,7 +45,7 @@ The application is structured into two main components:
 
   * **Costing Notification via Email**
   <p align="center">
-<img src="/pic/Costing-Email.jpeg" alt="Azure Costing" width="460" height="300">
+<img src="/pic/Costing-Email.jpeg" alt="Azure Costing" width="460" height="800">
 </p>
 
   * **Configurable Auto Function Shutdown if limit hits**
