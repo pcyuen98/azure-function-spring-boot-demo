@@ -43,3 +43,5 @@ Function-Util/target
 Function-Resource-Logging/target
 Function-Resource-Logging/logs
 test-function/
+
+/Function-Costing/src/main/resources/application.properties
