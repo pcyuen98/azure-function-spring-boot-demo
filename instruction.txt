@@ -1,0 +1,3 @@
+update this project to spring boot 4.0 and JDK 21. minimal changes.
+
+ensure maven build is success with skip test.

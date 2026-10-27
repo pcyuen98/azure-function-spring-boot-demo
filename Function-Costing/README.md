@@ -90,3 +90,31 @@ mvn clean package azure-functions:deploy
 > ✅ **Note:**\
 > After successful deployment, a list of the Function RESTful API
 > endpoints will be displayed in the console output.
+
+
+### create an application.properties file under src/main/resource/application.properties
+
+azure.resource.group=java-cost-function-resource-group777
+azure.storage.name=coststorage777
+azure.function.name=java-cost-function-777
+
+# Resource ID for the deployed Azure Function
+# Provide resource ID as format below
+# /subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/{providerNamespace}/{resourceType}/{resourceName}
+# i.e. /subscriptions/xxxxxx-4d66-4bee-a612-e66b89fbf8e9/resourceGroups/java-cost-function-resource-group777/providers/Microsoft.Web/sites/java-cost-function-777
+
+azure.function.resource-id=${AZURE_FUNCTION_RESOURCE_ID}
+
+# Email recipient for notifications
+azure.function.receipient.email=${EMAIL_RECEIPIENT}
+
+azure.function.limit.cost=10
+azure.function.limit.api=200
+
+#Obtain your api key and user from https://www.engagelab.com/ to send the email
+belisty.engagelab.api.user=${ENGAGELAB_API_USER}
+belisty.engagelab.api.key=${ENGAGELAB_API_KEY}
+
+belisty.engagelab.api.base-url=https://email.api.engagelab.cc/v1/mail/send
+belisty.engagelab.api.from-email=EngageLab@vqoricrahxhefdvkdmtcdoxbbaoldcoo.send.engagelab.email
+
