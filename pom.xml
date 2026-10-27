@@ -17,7 +17,7 @@
     </modules>
 
     <properties>
-        <java.version>21</java.version>
+        <java.version>17</java.version>
         <spring.boot.version>3.3.4</spring.boot.version>
         <spring.cloud.function.dependencies>4.0.0</spring.cloud.function.dependencies>
         <azure.functions.maven.plugin.version>1.22.0</azure.functions.maven.plugin.version>

@@ -1,23 +1,18 @@
 {
   "version": "2.0",
-  "extensionBundle": {
-    "id": "Microsoft.Azure.Functions.ExtensionBundle",
-    "version": "[4.*, 5.0.0)"
-  },
-  "functionTimeout": "00:10:00",
-    "logging": {
-    "LogLevel": {
-      "Default": "Error",
-      "Microsoft": "None",
-      "Function": "Information"
+  "logging": {
+    "logLevel": {
+      "default": "Trace",
+      "Host": "Trace",
+      "Host.Results": "Trace",
+      "Function": "Trace",
+      "Worker": "Trace",
+      "Microsoft": "Debug"
     },
     "applicationInsights": {
-      "LogLevel": {
-        "Default": "None"
+      "samplingSettings": {
+        "isEnabled": false
       }
-    },
-    "samplingSettings": {
-      "isEnabled": false
     }
   }
 }
