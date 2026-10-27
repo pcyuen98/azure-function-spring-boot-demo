@@ -1,34 +1,55 @@
 package com.belisty.function.service;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.IOException;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.ComponentScan;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @SpringBootTest
-@ComponentScan(basePackages = { "com.util.function.service", "com.belisty.function.service" }
-
-)
 class AzureCostManagementServiceTest {
 
-	@Autowired
-	private AzureCostManagementService azureCostManagementService;
+    @Autowired
+    private AzureCostManagementService azureCostManagementService;
 
-	@Test
-	void sendEmail() throws IOException {
-		log.info("sendEmail test starts");
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
-		String result = azureCostManagementService.sendEmail();
-		assertNotNull(result, "sendEmail should not return null");
-		assertEquals("OK", result, "sendEmail should return 'OK' when successful");
-	}
+    @Test
+    void sendEmail() throws IOException {
 
+        log.info("sendEmail test starts");
+
+        String result = azureCostManagementService.sendEmail();
+
+        assertNotNull(result, "Response should not be null");
+
+        log.info("EngageLab Response: {}", result);
+
+        JsonNode json = objectMapper.readTree(result);
+
+        assertTrue(
+            json.has("email_ids"),
+            "Response should contain email_ids"
+        );
+
+        assertTrue(
+            json.get("email_ids").isArray(),
+            "email_ids should be an array"
+        );
+
+        assertFalse(
+            json.get("email_ids").isEmpty(),
+            "email_ids should not be empty"
+        );
+
+        log.info("Email accepted by EngageLab");
+    }
 }

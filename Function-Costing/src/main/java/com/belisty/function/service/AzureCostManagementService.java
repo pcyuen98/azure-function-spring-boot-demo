@@ -65,7 +65,7 @@ public class AzureCostManagementService {
 		Response<QueryResult> q = manager.queries()
 				.usageWithResponse("subscriptions/" + subscriptionId,
 						new QueryDefinition().withType(ExportType.ACTUAL_COST)
-								.withTimeframe(TimeframeType.MONTH_TO_DATE)
+								.withTimeframe(TimeframeType.WEEK_TO_DATE)
 								.withDataset(new QueryDataset().withGranularity(GranularityType.DAILY)
 										.withAggregation(Map.of("totalCost",
 												new QueryAggregation().withName("PreTaxCost") // Azure’s cost column
