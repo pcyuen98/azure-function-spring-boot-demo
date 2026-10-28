@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Why getHistory was not generated</title>
+</head>
+<body>
+  <h1>Why getHistory was not generated</h1>
+  <p>
+    The <code>getHistory</code> Azure Function is declared by
+    <code>HistoryHandler</code> in the shared <code>function-util</code>
+    dependency. Its <code>@FunctionName</code> annotation is valid and the
+    Azure Functions Maven plugin can discover it.
+  </p>
+  <p>
+    The build environment is using JDK 17, while the project compiles for Java
+    21. The original build failed with “release version 21 not supported”.
+    When the plugin scanned the existing Java 21 class files under JDK 17, it
+    reported zero function entry points. This was a build JDK/bytecode mismatch,
+    not a missing function implementation.
+  </p>
+  <p>
+    A clean diagnostic package compiled for Java 17 generated metadata for
+    <code>getHistory</code>, <code>keepAlive</code>, and <code>shutdown</code>.
+    Build with JDK 21 to use the project's configured Java version; no
+    application code change is needed.
+  </p>
+</body>
+</html>

@@ -10,8 +10,7 @@ import com.util.function.service.AzureTableLoggerService;
 import lombok.AllArgsConstructor;
 
 /**
- * Azure Function using Spring Cloud Function style. This will be triggered via
- * FunctionInvoker.
+ * Spring Cloud Function bean invoked by the Azure logging handler.
  */
 @Component
 @AllArgsConstructor

@@ -10,8 +10,7 @@ import com.util.function.service.AzureResourceManagerService;
 import lombok.AllArgsConstructor;
 
 /**
- * Azure Function using Spring Cloud Function style. This will be triggered via
- * FunctionInvoker.
+ * Spring Cloud Function beans invoked by the Azure handlers.
  */
 @Component
 @AllArgsConstructor

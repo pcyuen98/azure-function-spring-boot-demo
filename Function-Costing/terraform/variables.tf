@@ -1,7 +1,7 @@
 variable "resource_group_name" {
   description = "Resource group to create/use"
   type        = string
-  default     = "java-cost-function-resource-group77703"
+  default     = "java-cost-function-resource-group77702"
 }
 
 variable "location" {
@@ -13,7 +13,7 @@ variable "location" {
 variable "name_prefix" {
   description = "Short name prefix for generated resources"
   type        = string
-  default     = "cost77703"
+  default     = "cost77702"
 }
 
 # ARM parameters
@@ -26,31 +26,31 @@ variable "action_group_name" {
 variable "app_insights_name" {
   description = "Application Insights component name"
   type        = string
-  default     = "java-cost-function-77703"
+  default     = "java-cost-function-77702"
 }
 
 variable "storage_account_name_effective" {
   description = "storage_account_name_effective component name"
   type        = string
-  default     = "storage-cost-function-77703"
+  default     = "storage-cost-function-77702"
 }
 
 variable "app_service_plan_name" {
   description = "Serverfarm (Functions Consumption Y1)"
   type        = string
-  default     = "java-cost-function-service-plan-77703"
+  default     = "java-cost-function-service-plan-77702"
 }
 
 variable "function_app_name" {
   description = "Function App site name"
   type        = string
-  default     = "java-cost-function-77703"
+  default     = "java-cost-function-77702"
 }
 
 variable "storage_account_name" {
   description = "Storage account name (leave empty to auto-generate)"
   type        = string
-  default     = "coststorage77703"
+  default     = "coststorage77702"
   validation {
     condition     = length(var.storage_account_name) == 0 || (length(var.storage_account_name) >= 3 && length(var.storage_account_name) <= 24 && can(regex("^[a-z0-9]+$", var.storage_account_name)))
     error_message = "storage_account_name must be 3-24 lowercase alphanumeric characters."

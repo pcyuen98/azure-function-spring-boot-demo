@@ -1,3 +1,3 @@
-update this project to spring boot 4.0 and JDK 21. minimal changes.
+check why HistoryFunction is not generated in this project in why.html
 
-ensure maven build is success with skip test.
+do not commit any code. check only and do not change any java file.

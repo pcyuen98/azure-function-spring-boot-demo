@@ -83,31 +83,21 @@ echo ========================================
 echo STEP 6: Azure Function Health Check
 echo ========================================
 
-set "URL=https://%RESOURCE_GROUP%.azurewebsites.net/api/gethistory"
-set "MAX_RETRIES=12"
-set "WAIT_SECONDS=5"
+set "FUNCTION_APP="
 
-echo Checking Azure Function...
-echo URL: !URL!
+for /f "usebackq delims=" %%A in (`powershell.exe -NoProfile -Command "[xml]$p=Get-Content -LiteralPath 'pom.xml'; $p.project.properties.functionAppName"`) do set "FUNCTION_APP=%%A"
 
-for /L %%I in (1,1,!MAX_RETRIES!) do (
-    set "HTTP_CODE="
-
-    for /f %%H in ('curl.exe -L -s -o NUL -w "%%{http_code}" --connect-timeout 3 --max-time 5 "!URL!"') do (
-        set "HTTP_CODE=%%H"
-    )
-
-    echo Attempt %%I/!MAX_RETRIES! - HTTP !HTTP_CODE!
-
-    if "!HTTP_CODE!"=="200" (
-        echo SUCCESS: Azure Function is responding.
-        exit /b 0
-    )
-
-    if %%I LSS !MAX_RETRIES! (
-        timeout /t !WAIT_SECONDS! /nobreak >nul
-    )
+if not defined FUNCTION_APP (
+    echo ERROR: Could not read functionAppName from pom.xml.
+    exit /b 1
 )
 
-echo ERROR: Azure Function did not return HTTP 200.
-exit /b 1
+set "URL=https://!FUNCTION_APP!.azurewebsites.net/api/loggingtest"
+
+echo URL: !URL!
+
+rem Strict 60-second deadline for health check.
+
+powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "$url=$env:URL; $end=(Get-Date).AddSeconds(60); $i=0; do { $i++; try { $r=Invoke-WebRequest -Uri $url -UseBasicParsing -TimeoutSec 5; $status=[int]$r.StatusCode } catch { $status=0; if ($_.Exception.Response) { $status=[int]$_.Exception.Response.StatusCode } }; Write-Host ('Attempt '+$i+' - HTTP '+$status); if ($status -eq 200) { Write-Host 'SUCCESS: Azure Function is responding.'; exit 0 }; $remaining=($end-(Get-Date)).TotalSeconds; if ($remaining -gt 0) { Start-Sleep -Seconds ([Math]::Min(5,$remaining)) } } while ((Get-Date) -lt $end); Write-Host 'ERROR: Azure Function did not return HTTP 200.'; exit 1"
+
+exit /b %ERRORLEVEL%

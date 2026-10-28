@@ -29,7 +29,7 @@
     }
   },
   "variables": {
-    "linuxFxVersion": "java|17"
+    "linuxFxVersion": "java|21"
   },
   "resources": [
     {

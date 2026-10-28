@@ -3,20 +3,21 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Why Java 17 is configured</title>
+  <title>Why Java 21 is configured</title>
 </head>
 <body>
-  <h1>Why Java 17 is configured</h1>
+  <h1>Why Java 21 is configured</h1>
   <p>
-    The Azure Functions Maven configuration for this project targets Java 17.
-    The shared Maven parent was compiling the function and its shared
-    <code>function-util</code> dependency for Java 21, so deployment rejected
-    the artifact because its bytecode was newer than the configured runtime.
+    The Azure Functions Maven plugin was configured to deploy this function
+    with a Java 17 runtime, while Maven compiled the function and its shared
+    <code>function-util</code> dependency for Java 21. Azure rejected the
+    artifact because its bytecode version was newer than the configured
+    runtime.
   </p>
   <p>
-    Setting the shared <code>java.version</code> to 17 makes Maven compile the
-    modules for the same Java version used by the Azure Functions runtime.
-    This keeps the application and its dependency compatible with Java 17.
+    Both the shared <code>java.version</code> and the Azure Functions runtime
+    are now set to Java 21. This keeps the application, its dependency, and the
+    deployed runtime compatible.
   </p>
 </body>
 </html>

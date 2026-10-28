@@ -1,8 +1,10 @@
 package com.belisty.function.service;
 
 import java.util.Optional;
+import java.util.function.Function;
 
-import org.springframework.cloud.function.adapter.azure.FunctionInvoker;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Component;
 
 import com.microsoft.azure.functions.ExecutionContext;
 import com.microsoft.azure.functions.HttpMethod;
@@ -13,7 +15,14 @@ import com.microsoft.azure.functions.annotation.AuthorizationLevel;
 import com.microsoft.azure.functions.annotation.FunctionName;
 import com.microsoft.azure.functions.annotation.HttpTrigger;
 
-public class LoggingHandler extends FunctionInvoker<String, String> {
+@Component
+public class LoggingHandler {
+
+    private final Function<Void, String> loggingFunction;
+
+    public LoggingHandler(@Qualifier("loggingtest") Function<Void, String> loggingFunction) {
+        this.loggingFunction = loggingFunction;
+    }
 	
     @FunctionName("loggingtest")
     public HttpResponseMessage logTest(
@@ -27,7 +36,7 @@ public class LoggingHandler extends FunctionInvoker<String, String> {
                 .header("Access-Control-Allow-Origin", "*")
                 .header("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
                 .header("Access-Control-Allow-Headers", "Content-Type, Authorization")
-                .body(handleRequest(context))
+                .body(loggingFunction.apply(null))
                 .build();
     }
 }

@@ -16,8 +16,8 @@
 	</parent>
 
 	<properties>
-		<functionResourceGroup>java-cost-function-resource-group77703</functionResourceGroup>
-		<functionAppName>java-cost-function-77703</functionAppName>
+		<functionResourceGroup>java-cost-function-resource-group77702</functionResourceGroup>
+		<functionAppName>java-cost-function-77702</functionAppName>
 	</properties>
 
 	<dependencies>
@@ -30,6 +30,7 @@
 		<dependency>
 			<groupId>com.squareup.okhttp3</groupId>
 			<artifactId>okhttp</artifactId>
+			<version>4.12.0</version>
 		</dependency>
 		<dependency>
 			<groupId>com.util.function</groupId>
@@ -108,7 +109,7 @@
 						${project.basedir}/src/main/azure/local.settings.json</localSettingsJson>
 					<runtime>
 						<os>linux</os>
-						<javaVersion>17</javaVersion>
+						<javaVersion>21</javaVersion>
 					</runtime>
 					<appSettings>
 						<!-- Run Azure Function from package file by default -->

@@ -5,6 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication(scanBasePackages = {
 		"com.util",
+		"com.util.function.service",
 		"com.belisty.function",
 	})
 public class AzureCostingApplication {

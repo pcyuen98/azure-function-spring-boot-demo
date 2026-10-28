@@ -17,9 +17,9 @@
     <name>Resource Logging Demo Function on Azure</name>
 
     <properties>
-        <functionResourceGroup>java-test-function-resource-group77702</functionResourceGroup>
-        <functionAppName>java-test-function-77701</functionAppName>
-        <maven.compiler.release>17</maven.compiler.release>
+        <functionResourceGroup>java-test-function-resource-group77703</functionResourceGroup>
+        <functionAppName>java-test-function-77703</functionAppName>
+        <maven.compiler.release>${java.version}</maven.compiler.release>
     </properties>
 
     <dependencies>
@@ -78,7 +78,7 @@
                     <localSettingsJson>${project.basedir}/src/main/azure/local.settings.json</localSettingsJson>
                     <runtime>
                         <os>linux</os>
-                        <javaVersion>17</javaVersion>
+                        <javaVersion>21</javaVersion>
                     </runtime>
                     <appSettings>
                         <property>

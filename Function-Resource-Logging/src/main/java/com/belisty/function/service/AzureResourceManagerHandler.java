@@ -1,8 +1,10 @@
 package com.belisty.function.service;
 
 import java.util.Optional;
+import java.util.function.Function;
 
-import org.springframework.cloud.function.adapter.azure.FunctionInvoker;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Component;
 
 import com.demo.utility_classes.ResponseEntityUtil;
 import com.microsoft.azure.functions.ExecutionContext;
@@ -13,7 +15,18 @@ import com.microsoft.azure.functions.annotation.AuthorizationLevel;
 import com.microsoft.azure.functions.annotation.FunctionName;
 import com.microsoft.azure.functions.annotation.HttpTrigger;
 
-public class AzureResourceManagerHandler extends FunctionInvoker<String, String> {
+@Component
+public class AzureResourceManagerHandler {
+
+	private final Function<String, String> azureResourceManagerFunction;
+	private final Function<String, String> stopAzureFunction;
+
+	public AzureResourceManagerHandler(
+			@Qualifier("azureResourceManager") Function<String, String> azureResourceManagerFunction,
+			@Qualifier("stopAzureFunction") Function<String, String> stopAzureFunction) {
+		this.azureResourceManagerFunction = azureResourceManagerFunction;
+		this.stopAzureFunction = stopAzureFunction;
+	}
 
 	@FunctionName("azureResourceManager")
 	public HttpResponseMessage azureResourceManager(@HttpTrigger(name = "request", methods = { HttpMethod.GET,
@@ -21,7 +34,7 @@ public class AzureResourceManagerHandler extends FunctionInvoker<String, String>
 			ExecutionContext context) {
 		
 		String clientIp = request.getHeaders().getOrDefault("x-forwarded-for", "");
-		return ResponseEntityUtil.buildResponse(request, handleRequest(clientIp, context));
+		return ResponseEntityUtil.buildResponse(request, azureResourceManagerFunction.apply(clientIp));
 	}
 
 	@FunctionName("stopAzureFunction")
@@ -30,7 +43,7 @@ public class AzureResourceManagerHandler extends FunctionInvoker<String, String>
 			ExecutionContext context) {
 		
 		String clientIp = request.getHeaders().getOrDefault("x-forwarded-for", "");
-		return ResponseEntityUtil.buildResponse(request, handleRequest(clientIp, context));
+		return ResponseEntityUtil.buildResponse(request, stopAzureFunction.apply(clientIp));
 	}
 
 }
