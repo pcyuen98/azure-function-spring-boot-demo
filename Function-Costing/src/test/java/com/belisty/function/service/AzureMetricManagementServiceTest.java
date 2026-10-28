@@ -8,6 +8,7 @@ import java.util.Arrays;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.ComponentScan;
 
@@ -25,6 +26,9 @@ import lombok.extern.slf4j.Slf4j;
 @ComponentScan(basePackages = { "com.util.function.service", "com.belisty.function.service" })
 class AzureMetricManagementServiceTest {
 
+    @Value("${azure.function.resource-id}")
+    private String resourceId;
+    
     @Autowired
     private AzureCostManagementService azureCostManagementService;
 
@@ -41,8 +45,6 @@ class AzureMetricManagementServiceTest {
     // Example metrics query
     @Test
     void testMetricsQuery() {
-        String resourceId =
-                "/subscriptions/5c3579a2-4d66-4bee-a612-e66b89fbf8e9/resourceGroups/my-spring-function-resource-group71/providers/Microsoft.Web/sites/my-spring-function-778";
 
         MetricsQueryClient client = new MetricsQueryClientBuilder()
                 .credential(new DefaultAzureCredentialBuilder().build())

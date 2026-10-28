@@ -13,7 +13,8 @@ terraform {
 }
 
 provider "azurerm" {
-  features {}
+  features {
+  }
 }
 
 # Resource group to host everything

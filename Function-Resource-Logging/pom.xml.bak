@@ -17,8 +17,8 @@
     <name>Resource Logging Demo Function on Azure</name>
 
     <properties>
-        <functionResourceGroup>java-test-function-resource-group77703</functionResourceGroup>
-        <functionAppName>java-test-function-77703</functionAppName>
+        <functionResourceGroup>java-test-function-resource-group77702</functionResourceGroup>
+        <functionAppName>java-test-function-77702</functionAppName>
         <maven.compiler.release>${java.version}</maven.compiler.release>
     </properties>
 

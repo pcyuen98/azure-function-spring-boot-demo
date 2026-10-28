@@ -16,8 +16,8 @@
 	</parent>
 
 	<properties>
-		<functionResourceGroup>java-cost-function-resource-group77702</functionResourceGroup>
-		<functionAppName>java-cost-function-77702</functionAppName>
+		<functionResourceGroup>java-cost-function-resource-group77705</functionResourceGroup>
+		<functionAppName>java-cost-function-77705</functionAppName>
 	</properties>
 
 	<dependencies>
