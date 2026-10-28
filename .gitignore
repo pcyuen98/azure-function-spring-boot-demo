@@ -46,3 +46,21 @@ test-function/
 
 /Function-Costing/src/main/resources/application.properties*
 
+
+# Terraform local state and sensitive backups
+**/.terraform/
+**/*.tfstate
+**/*.tfstate.*
+**/terraform-state-backup-*.json
+**/terraform.tfvars
+**/*.auto.tfvars
+**/crash.log
+
+# Terraform local state and sensitive backups
+**/.terraform/
+**/*.tfstate
+**/*.tfstate.*
+**/terraform-state-backup-*.json
+**/terraform.tfvars
+**/*.auto.tfvars
+**/crash.log
