@@ -64,3 +64,6 @@ test-function/
 **/terraform.tfvars
 **/*.auto.tfvars
 **/crash.log
+**/terraform.tfstate*
+**/terraform-state-backup-*.json
+**/.terraform/
