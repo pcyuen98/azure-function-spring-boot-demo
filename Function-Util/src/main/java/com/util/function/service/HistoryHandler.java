@@ -2,6 +2,7 @@ package com.util.function.service;
 
 import java.util.Optional;
 import java.util.function.Function;
+import java.util.logging.Level;
 
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
@@ -39,7 +40,7 @@ public class HistoryHandler {
                 .map(Integer::parseInt)
                 .orElse(10);
 
-        context.getLogger().info("Limit parameter: " + limit);
+        context.getLogger().log(Level.INFO, "Limit parameter: {0}", limit);
 
         // Pass limit as string to handleRequest
         String result = historyFunction.apply(limit);

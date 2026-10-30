@@ -1,4 +1,3 @@
-
 package com.belisty.function.service;
 
 import java.io.IOException;
@@ -9,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -38,10 +38,8 @@ import com.belisty.function.service.email.EmailService;
 import com.belisty.function.util.AzureCostEmailBuilder;
 import com.belisty.function.util.AzureCostEmailBuilder.EmailContent;
 import com.belisty.function.util.AzureCostManagementProperties;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
-
 import com.share.FunctionMetric;
 import com.util.function.service.AzureResourceManagerService;
 import com.util.function.service.AzureTableLoggerService;
@@ -54,241 +52,193 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class AzureCostManagementService {
 
-	private final AzureResourceManagerService azureResourceManagerService;
-
-	private final AzureFunctionMetricService azureFunctionMetricService;
-
-	private final AzureTableLoggerService azureTableLoggerService;
-
-	private final EmailService emailService;
-
-	private final AzureCostManagementProperties azureCostManagementProperties;
-
-	/**
-	 * Executes an Azure Cost Management query.
-	 *
-	 * Handles HTTP 429 rate-limit errors by logging available Azure quota and retry
-	 * headers.
-	 *
-	 * @param manager        Authenticated CostManagementManager
-	 * @param subscriptionId Azure subscription ID
-	 * @return List of cost records
-	 */
-	public List<Map<String, Object>> querySubscriptionCostLegacy(CostManagementManager manager, String subscriptionId) {
-
-		try {
-
-			Response<QueryResult> q = manager.queries()
-					.usageWithResponse("subscriptions/" + subscriptionId,
-							new QueryDefinition().withType(ExportType.ACTUAL_COST)
-									.withTimeframe(TimeframeType.WEEK_TO_DATE)
-									.withDataset(new QueryDataset().withGranularity(GranularityType.DAILY)
-											.withAggregation(Map.of("totalCost", new QueryAggregation()
-													.withName("PreTaxCost").withFunction(FunctionType.SUM)))),
-							Context.NONE);
-
-			QueryResult result = q.getValue();
-
-			List<Map<String, Object>> mappedResults = result.rows().stream()
-					.map((List<Object> row) -> IntStream.range(0, result.columns().size()).boxed().collect(
-							Collectors.toMap((Integer i) -> result.columns().get(i).name(), (Integer i) -> row.get(i))))
-					.collect(Collectors.toList());
-
-			try {
-
-				ObjectMapper mapper = new ObjectMapper();
-				mapper.enable(SerializationFeature.INDENT_OUTPUT);
-
-				String json = mapper.writeValueAsString(mappedResults);
-
-				log.info("Cost Management Query Result JSON:\n{}", json);
-
-			} catch (Exception e) {
-
-				log.error("Error serializing QueryResult to JSON", e);
-			}
-
-			return mappedResults;
-
-		} catch (ManagementException e) {
-
-			if (e.getResponse() != null && e.getResponse().getStatusCode() == 429) {
-
-				HttpHeaders headers = e.getResponse().getHeaders();
-
-				log.error("Azure Cost Management API rate limit exceeded (HTTP 429)");
-
-				log.error("Remaining subscription reads: {}",
-						getHeaderValue(headers, "x-ms-ratelimit-remaining-subscription-reads"));
-
-				log.error("Cost Management entity quota: {}",
-						getHeaderValue(headers, "x-ms-ratelimit-microsoft.costmanagement-entity-requests"));
-
-				log.error("Retry-After: {}", getHeaderValue(headers, "Retry-After"));
-
-				log.error("Azure response: {}", e.getMessage());
-
-				// Do not return an empty list for rate-limit failures.
-				// Propagate the exception so callers can retry or fail safely.
-				throw e;
-			}
-
-			throw e;
-		}
-	}
-
-	/**
-	 * Safely retrieves an HTTP header value without using the deprecated
-	 * HttpHeaders.getValue(String) method.
-	 *
-	 * @param headers HTTP response headers
-	 * @param name    Header name
-	 * @return Header value or N/A
-	 */
-	public static String getHeaderValue(HttpHeaders headers, String name) {
-
-		HttpHeader header = headers == null ? null : headers.get(name);
-
-		return header == null ? "N/A" : header.getValue();
-	}
-
-	/**
-	 * Returns the last five characters of a string.
-	 *
-	 * @param input Input string
-	 * @return Last five characters
-	 */
-	public static String getLast5Characters(String input) {
-
-		if (input == null || input.length() < 5) {
-
-			throw new IllegalArgumentException("String must contain at least 5 characters");
-		}
-
-		return input.substring(input.length() - 5);
-	}
-
-	/**
-	 * Retrieves Azure Cost Management records.
-	 *
-	 * @return Cost records
-	 * @throws IOException If an I/O error occurs
-	 */
-	public List<Map<String, Object>> getYesterdayCostList() throws IOException {
-
-		AzureResourceManager ar = azureResourceManagerService.getAzure();
-
-		String subscriptionId = ar.subscriptionId();
-
-		String tenantId = ar.tenantId();
-
-		log.info("Subscription ID: {}", subscriptionId);
-
-		CostManagementManager costManager = CostManagementManager.authenticate(
-				new DefaultAzureCredentialBuilder().build(),
-				new AzureProfile(tenantId, subscriptionId, AzureEnvironment.AZURE));
-
-		log.info("CostManagementManager initialized for subscription: {}", subscriptionId);
-
-		return querySubscriptionCostLegacy(costManager, subscriptionId);
-	}
-
-	/**
-	 * Builds and sends the daily Azure cost email.
-	 *
-	 * @return Email service response
-	 * @throws IOException If an I/O error occurs
-	 */
-	private String constructEmail() throws IOException {
-
-		List<Map<String, Object>> mappedResults = getYesterdayCostList();
-
-		List<String> recipients = new ArrayList<>();
-
-		recipients.add(azureCostManagementProperties.getReceipientEmail());
-
-		double totalCount = azureFunctionMetricService.getMetric(FunctionMetric.FUNCTION_EXECUTION_COUNT);
-
-		EmailContent emailContent = AzureCostEmailBuilder.buildDailyCostEmail(totalCount, mappedResults);
-
-		String subject = getLast5Characters(azureCostManagementProperties.getResourceId()) + " (" + totalCount
-				+ "/hour) " + emailContent.getSubject();
-
-		return emailService.sendEmail(recipients, subject, emailContent.getBody());
-	}
-
-	/**
-	 * Retrieves yesterday's PreTaxCost from Azure cost records.
-	 *
-	 * Yesterday is calculated in UTC.
-	 *
-	 * @param results Azure cost query results
-	 * @return Yesterday's cost or 0.0 if no matching record exists
-	 */
-	public Double getYesterdayPreTaxCost(List<Map<String, Object>> results) {
-
-		int yesterdayInt = Integer
-				.parseInt(LocalDate.now(ZoneOffset.UTC).minusDays(1).format(DateTimeFormatter.BASIC_ISO_DATE));
-
-		return results.stream().filter(row -> Integer.parseInt(row.get("UsageDate").toString()) == yesterdayInt)
-				.map(row -> row.get("PreTaxCost")).filter(Objects::nonNull)
-				.mapToDouble(val -> Double.parseDouble(val.toString())).findFirst().orElse(0.0);
-	}
-
-	/**
-	 * Sends the daily cost email.
-	 *
-	 * @return Email status
-	 * @throws IOException If an I/O error occurs
-	 */
-	public String sendEmail() throws IOException {
-
-		String emailStatus = null;
-
-		try {
-
-			emailStatus = this.constructEmail();
-
-		} catch (Exception e) {
-
-			log.error("Failed to send Azure cost email", e);
-
-			this.azureTableLoggerService.log("INFO", e.getMessage());
-		}
-
-		return emailStatus;
-	}
-
-	/**
-	 * Stops the Azure Function App when either:
-	 *
-	 * 1. API execution count exceeds the configured limit. 2. Yesterday's Azure
-	 * cost exceeds the configured cost limit.
-	 *
-	 * @throws IOException If an I/O error occurs
-	 */
-	public void limitUpAndshutdown() throws IOException {
-
-		Double yesterdayCost = getYesterdayPreTaxCost(getYesterdayCostList());
-
-		Double apiCount = azureFunctionMetricService.getMetric(FunctionMetric.FUNCTION_EXECUTION_COUNT);
-
-		log.info("Azure Function usage: apiCount={}, yesterdayCost={}", apiCount, yesterdayCost);
-
-		if (apiCount > azureCostManagementProperties.getApiLimit()
-				|| yesterdayCost > azureCostManagementProperties.getCostLimit()) {
-
-			FunctionApp functionApp = azureResourceManagerService
-					.getFunctionAppById(azureCostManagementProperties.getResourceId());
-
-			azureTableLoggerService.log("INFO",
-					"Function limit up apiCount=" + apiCount + " yesterdayCost=" + yesterdayCost);
-
-			sendEmail();
-
-			functionApp.stop();
-
-			log.warn("Azure Function App stopped because usage limit was exceeded.");
-		}
-	}
+    private static final int MAX_RETRIES = 20;
+    private static final long RETRY_DELAY_SECONDS = 10;
+
+    private final AzureResourceManagerService azureResourceManagerService;
+    private final AzureFunctionMetricService azureFunctionMetricService;
+    private final AzureTableLoggerService azureTableLoggerService;
+    private final EmailService emailService;
+    private final AzureCostManagementProperties azureCostManagementProperties;
+
+    /** Queries Azure Cost Management and logs HTTP 429 rate-limit details. */
+    public List<Map<String, Object>> querySubscriptionCostLegacy(
+            CostManagementManager manager, String subscriptionId) {
+        try {
+            Response<QueryResult> q = manager.queries().usageWithResponse(
+                    "subscriptions/" + subscriptionId,
+                    new QueryDefinition()
+                            .withType(ExportType.ACTUAL_COST)
+                            .withTimeframe(TimeframeType.WEEK_TO_DATE)
+                            .withDataset(new QueryDataset()
+                                    .withGranularity(GranularityType.DAILY)
+                                    .withAggregation(Map.of("totalCost",
+                                            new QueryAggregation()
+                                                    .withName("PreTaxCost")
+                                                    .withFunction(FunctionType.SUM)))),
+                    Context.NONE);
+
+            QueryResult result = q.getValue();
+            List<Map<String, Object>> mappedResults = result.rows().stream()
+                    .map((List<Object> row) -> IntStream.range(0, result.columns().size())
+                            .boxed()
+                            .collect(Collectors.toMap(
+                                    (Integer i) -> result.columns().get(i).name(),
+                                    row::get)))
+                    .toList();
+
+            logCostQueryResult(mappedResults);
+            return mappedResults;
+        } catch (ManagementException e) {
+            if (isRateLimited(e)) {
+                HttpHeaders headers = e.getResponse().getHeaders();
+                log.error("Azure Cost Management API rate limit exceeded (HTTP 429)");
+                log.error("Remaining subscription reads: {}",
+                        getHeaderValue(headers, "x-ms-ratelimit-remaining-subscription-reads"));
+                log.error("Cost Management entity quota: {}",
+                        getHeaderValue(headers, "x-ms-ratelimit-microsoft.costmanagement-entity-requests"));
+                log.error("Retry-After: {}", getHeaderValue(headers, "Retry-After"));
+                log.error("Retry-After-ms: {}", getHeaderValue(headers, "retry-after-ms"));
+                log.error("Azure response: {}", e.getMessage());
+            }
+            throw e;
+        }
+    }
+
+    private static boolean isRateLimited(ManagementException e) {
+        return e.getResponse() != null && e.getResponse().getStatusCode() == 429;
+    }
+
+    /** Retries only HTTP 429 errors, with 20 total attempts and 10 seconds between attempts. */
+    private List<Map<String, Object>> querySubscriptionCostWithRetry(
+            CostManagementManager costManager, String subscriptionId) {
+        for (int attempt = 1; attempt <= MAX_RETRIES; attempt++) {
+            try {
+                log.info("Azure Cost Management query attempt {}/{}", attempt, MAX_RETRIES);
+                return querySubscriptionCostLegacy(costManager, subscriptionId);
+            } catch (ManagementException e) {
+                if (!isRateLimited(e)) {
+                    throw e;
+                }
+                if (attempt == MAX_RETRIES) {
+                    log.error("Azure Cost Management API failed after {} attempts (HTTP 429)",
+                            MAX_RETRIES, e);
+                    throw e;
+                }
+                log.warn("HTTP 429 on attempt {}/{}. Retrying in {} seconds...",
+                        attempt, MAX_RETRIES, RETRY_DELAY_SECONDS);
+                try {
+                    TimeUnit.SECONDS.sleep(RETRY_DELAY_SECONDS);
+                } catch (InterruptedException interruptedException) {
+                    Thread.currentThread().interrupt();
+                    throw new IllegalStateException(
+                            "Azure Cost Management retry interrupted", interruptedException);
+                }
+            }
+        }
+        throw new IllegalStateException("Azure Cost Management retry loop ended unexpectedly");
+    }
+
+    private void logCostQueryResult(List<Map<String, Object>> mappedResults) {
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            mapper.enable(SerializationFeature.INDENT_OUTPUT);
+            String json = mapper.writeValueAsString(mappedResults);
+            log.info("Cost Management Query Result JSON:\n{}", json);
+        } catch (Exception e) {
+            log.error("Error serializing QueryResult to JSON", e);
+        }
+    }
+
+    /** Returns a header value without using deprecated HttpHeaders.get(String). */
+    public static String getHeaderValue(HttpHeaders headers, String name) {
+        if (headers == null || name == null) {
+            return "N/A";
+        }
+        return headers.stream()
+                .filter(header -> name.equalsIgnoreCase(header.getName()))
+                .map(HttpHeader::getValue)
+                .findFirst()
+                .orElse("N/A");
+    }
+
+    public static String getLast5Characters(String input) {
+        if (input == null || input.length() < 5) {
+            throw new IllegalArgumentException("String must contain at least 5 characters");
+        }
+        return input.substring(input.length() - 5);
+    }
+
+    public List<Map<String, Object>> getYesterdayCostList() throws IOException {
+        AzureResourceManager ar = azureResourceManagerService.getAzure();
+        String subscriptionId = ar.subscriptionId();
+        String tenantId = ar.tenantId();
+        log.info("Subscription ID: {}", subscriptionId);
+
+        CostManagementManager costManager = CostManagementManager.authenticate(
+                new DefaultAzureCredentialBuilder().build(),
+                new AzureProfile(tenantId, subscriptionId, AzureEnvironment.AZURE));
+        log.info("CostManagementManager initialized for subscription: {}", subscriptionId);
+
+        return querySubscriptionCostWithRetry(costManager, subscriptionId);
+    }
+
+    private String constructEmail(String shutdownString) throws IOException {
+        List<Map<String, Object>> mappedResults = getYesterdayCostList();
+        List<String> recipients = new ArrayList<>();
+        recipients.add(azureCostManagementProperties.getReceipientEmail());
+
+        double totalCount = azureFunctionMetricService.getMetric(
+                FunctionMetric.FUNCTION_EXECUTION_COUNT);
+        EmailContent emailContent = AzureCostEmailBuilder.buildDailyCostEmail(
+                totalCount, mappedResults);
+        String subject = shutdownString + "-" +
+                getLast5Characters(azureCostManagementProperties.getResourceId()) +
+                " (" + totalCount + "/hour) " + emailContent.getSubject();
+        return emailService.sendEmail(recipients, subject, emailContent.getBody());
+    }
+
+    /** Yesterday is calculated in UTC. Returns zero when no matching row exists. */
+    public Double getYesterdayPreTaxCost(List<Map<String, Object>> results) {
+        int yesterdayInt = Integer.parseInt(LocalDate.now(ZoneOffset.UTC)
+                .minusDays(1).format(DateTimeFormatter.BASIC_ISO_DATE));
+        return results.stream()
+                .filter(row -> Integer.parseInt(row.get("UsageDate").toString()) == yesterdayInt)
+                .map(row -> row.get("PreTaxCost"))
+                .filter(Objects::nonNull)
+                .mapToDouble(val -> Double.parseDouble(val.toString()))
+                .findFirst()
+                .orElse(0.0);
+    }
+
+    public String sendEmail(String shutdownString) throws IOException {
+        String emailStatus = null;
+        try {
+            emailStatus = this.constructEmail(shutdownString);
+        } catch (Exception e) {
+            log.error("Failed to send Azure cost email", e);
+            this.azureTableLoggerService.log("INFO", e.getMessage());
+        }
+        return emailStatus;
+    }
+
+    /** Stops the Azure Function App if API count or yesterday's cost exceeds its limit. */
+    public void limitUpAndshutdown() throws IOException {
+        Double yesterdayCost = getYesterdayPreTaxCost(getYesterdayCostList());
+        Double apiCount = azureFunctionMetricService.getMetric(
+                FunctionMetric.FUNCTION_EXECUTION_COUNT);
+        log.info("Azure Function usage: apiCount={}, yesterdayCost={}", apiCount, yesterdayCost);
+
+        if (apiCount > azureCostManagementProperties.getApiLimit()
+                || yesterdayCost > azureCostManagementProperties.getCostLimit()) {
+            FunctionApp functionApp = azureResourceManagerService.getFunctionAppById(
+                    azureCostManagementProperties.getResourceId());
+            azureTableLoggerService.log("INFO",
+                    "Function limit up apiCount=" + apiCount + " yesterdayCost=" + yesterdayCost);
+            String shutdownString = "Shutting down Azure Function App due to limit exceeded: ";
+            sendEmail(shutdownString);
+            functionApp.stop();
+            log.warn("Azure Function App stopped because usage limit was exceeded.");
+        }
+    }
 }

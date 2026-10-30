@@ -27,8 +27,8 @@ class AzureCostManagementServiceTest {
 
         log.info("sendEmail test starts");
 
-        String result = azureCostManagementService.sendEmail();
-
+        String result = azureCostManagementService.sendEmail("AzureCostManagementServiceTest UNIT TEST");
+        
         assertNotNull(result, "Response should not be null");
 
         log.info("EngageLab Response: {}", result);
@@ -49,7 +49,7 @@ class AzureCostManagementServiceTest {
             json.get("email_ids").isEmpty(),
             "email_ids should not be empty"
         );
-
+        azureCostManagementService.limitUpAndshutdown();
         log.info("Email accepted by EngageLab");
     }
 }

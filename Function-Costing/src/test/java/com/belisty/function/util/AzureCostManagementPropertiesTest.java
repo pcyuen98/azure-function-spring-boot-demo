@@ -65,7 +65,7 @@ class AzureCostManagementPropertiesTest {
 				.startsWith("https://"); // The assertion predicate is now last
 
 		assertThat(props.getEngageLabApiBaseUrl()).isNotNull();
-		assertThat(props.getCostLimit()).isGreaterThan(0);
-		assertThat(props.getApiLimit()).isGreaterThan(0);
+		assertThat(props.getCostLimit()).isPositive();
+		assertThat(props.getApiLimit()).isPositive();
 	}
 }

@@ -1,7 +1,10 @@
+
 package com.belisty.function.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -23,28 +26,47 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @SpringBootTest
-@ComponentScan(basePackages = { "com.util.function.service", "com.belisty.function.service" })
+@ComponentScan(basePackages = {
+        "com.util.function.service",
+        "com.belisty.function.service"
+})
 class AzureMetricManagementServiceTest {
 
     @Value("${azure.function.resource-id}")
     private String resourceId;
-    
+
     @Autowired
     private AzureCostManagementService azureCostManagementService;
 
-    // Example unit test
+    // Optional email integration test
     // @Test
     void sendEmail() throws IOException {
+
         log.info("sendEmail test starts");
 
-        String result = azureCostManagementService.sendEmail();
+        String result = azureCostManagementService.sendEmail("AzureMetricManagementServiceTest UNIT TEST");
+
         assertNotNull(result, "sendEmail should not return null");
-        assertEquals("OK", result, "sendEmail should return 'OK' when successful");
+
+        assertEquals(
+                "OK",
+                result,
+                "sendEmail should return 'OK' when successful"
+        );
     }
 
-    // Example metrics query
     @Test
     void testMetricsQuery() {
+
+        assertNotNull(
+                resourceId,
+                "Azure Function resource ID must not be null"
+        );
+
+        assertFalse(
+                resourceId.isBlank(),
+                "Azure Function resource ID must not be blank"
+        );
 
         MetricsQueryClient client = new MetricsQueryClientBuilder()
                 .credential(new DefaultAzureCredentialBuilder().build())
@@ -55,25 +77,83 @@ class AzureMetricManagementServiceTest {
                 Arrays.asList("FunctionExecutionCount")
         );
 
+        // SonarQube fix: Assert Azure query response
+        assertNotNull(
+                result,
+                "Azure Metrics query result must not be null"
+        );
+
+        assertNotNull(
+                result.getMetrics(),
+                "Azure Metrics collection must not be null"
+        );
+
+        assertFalse(
+                result.getMetrics().isEmpty(),
+                "Azure Metrics collection must not be empty"
+        );
+
         double totalSum = 0.0;
 
         for (MetricResult metric : result.getMetrics()) {
-            System.out.println("Metric: " + metric.getMetricName());
+
+            assertNotNull(
+                    metric,
+                    "Metric result must not be null"
+            );
+
+            assertNotNull(
+                    metric.getMetricName(),
+                    "Metric name must not be null"
+            );
+
+            log.info("Metric: {}", metric.getMetricName());
+
+            assertNotNull(
+                    metric.getTimeSeries(),
+                    "Metric time series must not be null"
+            );
+
             metric.getTimeSeries().forEach(ts -> {
+
+                assertNotNull(
+                        ts.getValues(),
+                        "Metric values must not be null"
+                );
+
                 for (MetricValue value : ts.getValues()) {
-                    System.out.println(value.getTimeStamp() + " -> " + value.getTotal());
+
+                    log.info(
+                            "{} -> {}",
+                            value.getTimeStamp(),
+                            value.getTotal()
+                    );
                 }
             });
 
-            // Sum across all time series values
-            totalSum += metric.getTimeSeries().stream()
+            totalSum += metric.getTimeSeries()
+                    .stream()
                     .flatMap(ts -> ts.getValues().stream())
                     .filter(v -> v.getTotal() != null)
-                    .mapToDouble(v -> v.getTotal())
+                    .mapToDouble(MetricValue::getTotal)
                     .sum();
         }
 
-        System.out.println("=== Total FunctionExecutionCount in queried interval ===");
-        System.out.println("SUM = " + totalSum);
+        log.info(
+                "=== Total FunctionExecutionCount in queried interval ==="
+        );
+
+        log.info("SUM = {}", totalSum);
+
+        // SonarQube fix: Assert valid execution count
+        assertTrue(
+                Double.isFinite(totalSum),
+                "Total FunctionExecutionCount must be finite"
+        );
+
+        assertTrue(
+                totalSum >= 0.0,
+                "Total FunctionExecutionCount must not be negative"
+        );
     }
 }

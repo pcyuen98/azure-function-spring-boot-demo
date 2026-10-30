@@ -11,14 +11,13 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Component
-//@AllArgsConstructor
 public class AzureTableLoggerInitializer implements ApplicationRunner {
 
 	private final AzureResourceManagerService azureResourceManagerService;
 	
 	private final AzureTableLoggerService loggerService;
 	
-	public final static String LOGGER_TABLE_NAME = "logger";
+	public static final String LOGGER_TABLE_NAME = "logger";
 
 	public AzureTableLoggerInitializer(AzureTableLoggerService loggerService,
 			AzureResourceManagerService azureResourceManagerService) {

@@ -1,9 +1,11 @@
+
 package com.belisty.function.service;
 
+import static org.awaitility.Awaitility.await;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.fail;
 
-import java.io.IOException;
+import java.time.Duration;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,85 +34,92 @@ class AzureYesterdayCostManagementServiceTest {
     private AzureFunctionMetricService azureFunctionMetricService;
 
     @Test
-    void getYesterdayCostTest() throws IOException {
+    void getYesterdayCostTest() {
 
-        Exception lastException = null;
+        AtomicInteger attempts = new AtomicInteger(0);
 
-        for (int attempt = 1; attempt <= MAX_RETRIES; attempt++) {
+        await()
+                .alias("Azure yesterday cost management test")
+                .pollDelay(Duration.ZERO)
+                .pollInterval(Duration.ofMillis(RETRY_DELAY_MS))
+                .atMost(Duration.ofMinutes(10))
+                .until(() -> {
 
-            try {
-                log.info("Attempt {}/{} started",
-                        attempt, MAX_RETRIES);
+                    int attempt = attempts.incrementAndGet();
 
-                Double yesterdayCost =
-                        azureCostManagementService.getYesterdayPreTaxCost(
-                                azureCostManagementService.getYesterdayCostList()
+                    log.info(
+                            "Attempt {}/{} started",
+                            attempt,
+                            MAX_RETRIES
+                    );
+
+                    try {
+
+                        Double yesterdayCost =
+                                azureCostManagementService.getYesterdayPreTaxCost(
+                                        azureCostManagementService.getYesterdayCostList()
+                                );
+
+                        assertNotNull(
+                                yesterdayCost,
+                                "yesterdayCost should not return null"
                         );
 
-                assertNotNull(
-                        yesterdayCost,
-                        "yesterdayCost should not return null"
-                );
-
-                log.info("Yesterday cost: {}", yesterdayCost);
-
-                Double apiCount =
-                        azureFunctionMetricService.getMetric(
-                                FunctionMetric.FUNCTION_EXECUTION_COUNT
+                        log.info(
+                                "Yesterday cost: {}",
+                                yesterdayCost
                         );
 
-                assertNotNull(
-                        apiCount,
-                        "execution count should not return null"
-                );
+                        Double apiCount =
+                                azureFunctionMetricService.getMetric(
+                                        FunctionMetric.FUNCTION_EXECUTION_COUNT
+                                );
 
-                log.info("API execution count: {}", apiCount);
+                        assertNotNull(
+                                apiCount,
+                                "execution count should not return null"
+                        );
 
-                azureCostManagementService.limitUpAndshutdown();
+                        log.info(
+                                "API execution count: {}",
+                                apiCount
+                        );
 
-                log.info("Test completed successfully on attempt {}",
-                        attempt);
+                        azureCostManagementService.limitUpAndshutdown();
 
-                return;
+                        log.info(
+                                "Test completed successfully on attempt {}",
+                                attempt
+                        );
 
-            } catch (Exception | AssertionError e) {
+                        return true;
 
-                lastException = e instanceof Exception
-                        ? (Exception) e
-                        : new RuntimeException(e);
+                    } catch (Exception | AssertionError e) {
 
-                log.error(
-                        "Attempt {}/{} failed: {}",
-                        attempt,
-                        MAX_RETRIES,
-                        e.getMessage(),
-                        e
-                );
+                        log.error(
+                                "Attempt {}/{} failed: {}",
+                                attempt,
+                                MAX_RETRIES,
+                                e.getMessage(),
+                                e
+                        );
 
-                if (attempt == MAX_RETRIES) {
-                    break;
-                }
+                        if (attempt >= MAX_RETRIES) {
+                            throw new AssertionError(
+                                    "Test failed after "
+                                            + MAX_RETRIES
+                                            + " attempts",
+                                    e
+                            );
+                        }
 
-                log.info(
-                        "Waiting {} seconds before retry...",
-                        RETRY_DELAY_MS / 1000
-                );
+                        log.info(
+                                "Waiting {} seconds before retry...",
+                                RETRY_DELAY_MS / 1000
+                        );
 
-                try {
-                    Thread.sleep(RETRY_DELAY_MS);
-
-                } catch (InterruptedException interruptedException) {
-
-                    Thread.currentThread().interrupt();
-
-                    fail("Retry interrupted", interruptedException);
-                }
-            }
-        }
-
-        fail(
-                "Test failed after " + MAX_RETRIES + " attempts",
-                lastException
-        );
+                        return false;
+                    }
+                });
     }
 }

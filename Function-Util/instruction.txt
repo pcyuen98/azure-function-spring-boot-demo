@@ -1,0 +1,239 @@
+Fix all this sonar issues below. ensure maven build success
+
+Do not commit any code
+
+Skip to main contentSkip to issue filters
+Logo, link to homepage
+Projects
+Issues
+Rules
+Quality Profiles
+Quality Gates
+Administration
+
+Search for projects...
+A
+Function Util
+
+main
+October 30, 2026 at 3:26 PM
+Version 1.0.0-SNAPSHOT
+
+Overview
+Issues
+Security Hotspots
+Measures
+Code
+Activity
+Project Settings
+Project Information
+Issues
+My Issues
+All
+Filters
+
+Issues in new code
+Type
+
+Bug
+0
+
+Vulnerability
+0
+
+Code Smell
+9
+Severity
+
+Blocker
+0
+
+Minor
+1
+
+Critical
+4
+
+Info
+0
+
+Major
+4
+Scope
+Resolution
+Status
+Security Category
+Creation Date
+Language
+Rule
+Tag
+Directory
+File
+Assignee
+Author
+Bulk Change
+↑
+←↓→
+1 / 9issues
+1h 8min effort
+List of issues
+src/.../java/com/util/function/config/AzureTableLoggerInitializer.java
+Reorder the modifiers to comply with the Java Language Specification.
+
+1 year ago
+L21
+
+Code Smell
+
+Minor
+
+Open
+
+Not assigned
+2min effort
+
+Comment
+
+convention
+src/.../java/com/util/function/service/AzureResourceManagerService.java
+Remove this unused method parameter "input".
+
+1 year ago
+L60
+
+Code Smell
+
+Major
+
+Open
+
+Not assigned
+5min effort
+
+Comment
+
+cert, unused
+This block of commented-out lines of code should be removed.
+
+1 year ago
+L107
+
+Code Smell
+
+Major
+
+Open
+
+Not assigned
+5min effort
+
+Comment
+
+unused
+src/.../java/com/util/function/service/AzureTableLoggerService.java
+Define a constant instead of duplicating this literal "AzureTableLoggerService is not initialized." 4 times.
+
+1 year ago
+L44
+
+Code Smell
+
+Critical
+
+Open
+
+Not assigned
+10min effort
+
+Comment
+
+design
+Define a constant instead of duplicating this literal "Timestamp" 8 times.
+
+1 year ago
+L53
+
+Code Smell
+
+Critical
+
+Open
+
+Not assigned
+18min effort
+
+Comment
+
+design
+Define a constant instead of duplicating this literal "Message" 4 times.
+
+1 year ago
+L88
+
+Code Smell
+
+Critical
+
+Open
+
+Not assigned
+10min effort
+
+Comment
+
+design
+Define a constant instead of duplicating this literal "GMT+8" 3 times.
+
+1 year ago
+L90
+
+Code Smell
+
+Critical
+
+Open
+
+Not assigned
+8min effort
+
+Comment
+
+design
+Replace this usage of 'Stream.collect(Collectors.toList())' with 'Stream.toList()'
+
+1 year ago
+L91
+
+Code Smell
+
+Major
+
+Open
+
+Not assigned
+5min effort
+
+Comment
+
+java16
+src/.../java/com/util/function/service/HistoryHandler.java
+Use the built-in formatting to construct this argument.
+
+1 year ago
+L42
+
+Code Smell
+
+Major
+
+Open
+
+Not assigned
+5min effort
+
+Comment
+
+performance
+9 of 9 shown
+SonarQube™ technology is powered by SonarSource SA
+Community EditionVersion 9.9 (build 65466)LGPL v3CommunityDocumentationPluginsWeb API

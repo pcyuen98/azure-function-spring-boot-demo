@@ -25,6 +25,6 @@ public class AzureResourceManagerFunction {
 
 	@Bean(name = "stopAzureFunction")
 	public Function<String, String> stopAzureService() {
-		return azureResourceManagerService::stopAzureService;
+	    return input -> azureResourceManagerService.stopAzureService();
 	}
 }

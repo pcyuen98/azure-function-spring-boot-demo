@@ -57,7 +57,7 @@ public class AzureResourceManagerService {
 
 	}
 
-	public String stopAzureService(String input) {
+	public String stopAzureService() {
 		FunctionApp functionApp = getAzure().functionApps().getByResourceGroup(getRg(), getFunctionName());
 		loggerService.info("Stopping Azure Service");
 		functionApp.stop();
@@ -104,7 +104,6 @@ public class AzureResourceManagerService {
         initialize();
         String connectionString = getStorageConnectionString();
         System.setProperty("AzureWebJobsStorage", connectionString);
-        //loggerService.info("Configured AzureWebJobsStorage dynamically for Function runtime.");
     }
     
     public FunctionApp getFunctionAppById(String resourceId) {

@@ -23,7 +23,7 @@ public class CostEmailSchedulerFunction {
 	public void keepAlive(@TimerTrigger(name = "keepAliveTrigger", schedule = "0 */60 * * * *") String timerInfo,
 			ExecutionContext context) throws IOException {
 
-		String result = azureCostManagementService.sendEmail();
+		String result = azureCostManagementService.sendEmail("keepAlive");
 		
 		loggerService.log("INFO", "Scheduler works updated - " + result);
 		
