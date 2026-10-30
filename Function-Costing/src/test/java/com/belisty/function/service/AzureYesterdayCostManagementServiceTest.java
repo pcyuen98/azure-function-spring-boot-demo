@@ -11,7 +11,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.ComponentScan;
 
 import com.share.FunctionMetric;
-import com.util.function.service.AzureResourceManagerService;
 
 import lombok.extern.slf4j.Slf4j;
 
